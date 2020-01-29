@@ -165,6 +165,8 @@ function _se(){
     _describe -t zdir 'my learning' learn_ary
 }
 
+compdef _se se redo rsql
+
 # to allow reverse numeric sort and numeric sort
 # as opposed to lexicographic sort
 zstyle ':completion:*:*:(se|redo|rsql|z|r):*:*' sort false
@@ -263,3 +265,5 @@ function redo(){
 zle -N learn
 bindkey -M viins '^k' learn
 bindkey -M vicmd '^k' learn
+
+
