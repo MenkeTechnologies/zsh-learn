@@ -228,34 +228,62 @@ function learn(){
 
 function rsql(){
     printf ""> "$ZPWR_TEMPFILE_SQL"
-    for num in $@; do
-        id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | perl -ne "print if \$. == quotemeta('$num')")
-        if [[ -z $id ]]; then
-            continue
-        fi
-        item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
-        item=${item//\'/\\\'}
+    if [[ -z "$1" ]]; then
+            id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | tail -n 1)
+            if [[ -z $id ]]; then
+                continue
+            fi
+            item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
+            item=${item//\'/\\\'}
 
-        echo "update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = '$item' where id=$id"
-    done >> "$ZPWR_TEMPFILE_SQL"
+            echo "update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = '$item' where id=$id" >> "$ZPWR_TEMPFILE_SQL"
+    else
+        for num in $@; do
+            id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | perl -ne "print if \$. == quotemeta('$num')")
+            if [[ -z $id ]]; then
+                continue
+            fi
+            item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
+            item=${item//\'/\\\'}
 
-    vim "$ZPWR_TEMPFILE_SQL"
-    cat "$ZPWR_TEMPFILE_SQL" | mysql
-    command rm "$ZPWR_TEMPFILE_SQL"
+            echo "update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = '$item' where id=$id"
+        done >> "$ZPWR_TEMPFILE_SQL"
+    fi
+
+    if [[ $ZPWR_USE_NEOVIM == true ]]; then
+        nvim "$ZPWR_TEMPFILE_SQL"
+        cat "$ZPWR_TEMPFILE_SQL" | mysql
+        command rm "$ZPWR_TEMPFILE_SQL"
+    else
+        vim "$ZPWR_TEMPFILE_SQL"
+        cat "$ZPWR_TEMPFILE_SQL" | mysql
+        command rm "$ZPWR_TEMPFILE_SQL"
+    fi
 }
 
 function redo(){
     echo > "$ZPWR_TEMPFILE"
-    for num in $@; do
-        id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | perl -ne "print if \$. == quotemeta('$num')")
-        if [[ -z $id ]]; then
-            continue
-        fi
-        item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
-        item=${item//\'/\\\'\'}
+    if [[ -z "$1" ]]; then
+            id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | tail -n 1)
+            if [[ -z $id ]]; then
+                continue
+            fi
+            item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
+            item=${item//\'/\\\'\'}
 
-        echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$item"''"" where id=$id' | mysql"
-    done >> "$ZPWR_TEMPFILE"
+            echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$item"''"" where id=$id' | mysql" >> "$ZPWR_TEMPFILE"
+    else
+        for num in $@; do
+            id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | perl -ne "print if \$. == quotemeta('$num')")
+            if [[ -z $id ]]; then
+                continue
+            fi
+            item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
+            item=${item//\'/\\\'\'}
+
+            echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$item"''"" where id=$id' | mysql"
+        done >> "$ZPWR_TEMPFILE"
+    fi
 
     print -rz "$(cat "$ZPWR_TEMPFILE")"
     command rm "$ZPWR_TEMPFILE"
