@@ -53,6 +53,7 @@ function sef(){
 
 alias es=se
 alias ses=se
+alias sse=se
 
 function se(){
     if test -z "$1"; then
