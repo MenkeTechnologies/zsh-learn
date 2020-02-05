@@ -5,36 +5,40 @@ This plugin contain all functionality to have a a learning collection stored in 
 
 ## functions
 
-- le
+- le (short for learn)
 
 Take the first arg as the learning text and inserts into learning table
 
-- se
+- se (short for search)
 
 Selects learning column from all records from the learning table
 
-- del
+- del (short for delete)
 
 Deletes last item from table
 
-- sef
+- sef (short for search fzf)
 
 Selects all from the learning table into fzf with most recent first
 
-- see
+- see(short for search extra)
+
 
 Selects learning and category columns from all records from the learning table
 
-- seee
+- seee(short for search extra extra)
+
 
 Selects learning, category and date columns from all records from the learning table
 
-- ser
+- ser(short for search random)
+
 
 Selects learning column from 100 random records from the learning table
 First arg is number of random records
 
-- qu
+- qu(short for quiz)
+
 
 Selects learning column from 100 random records from the learning table into fzf
 First arg is number of random records
@@ -45,10 +49,11 @@ First arg is number of random records
 Selects learning column from last records from the learning table and print to prompt with SQL update statements.
 One or more args are the number order records to print to prompt
 
-- rsql
+- rsql (short for redo sql)
+
 
 Selects learning column from last records from the learning table and print to vim with SQ update statements.
-One or morer args are the number order records to print to prompt
+One or more args are the number order records to print to prompt
 
 - createLearningCollection
 
