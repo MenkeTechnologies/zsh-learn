@@ -172,7 +172,7 @@ compdef _se se redo rsql re
 
 # to allow reverse numeric sort and numeric sort
 # as opposed to lexicographic sort
-zstyle ':completion:*:*:(se|redo|rsql|z|r):*:*' sort false
+zstyle ':completion:*:*:(se|redo|rsql|z|r|re):*:*' sort false
 
 # rsql ;<tab>
 function _fzf_complete_rsql() {
