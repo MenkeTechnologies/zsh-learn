@@ -54,6 +54,7 @@ function sef(){
 alias es=se
 alias ses=se
 alias sse=se
+alias re=redo
 
 function se(){
     if test -z "$1"; then
@@ -167,7 +168,7 @@ function _se(){
     _describe -t zdir 'my learning' learn_ary
 }
 
-compdef _se se redo rsql
+compdef _se se redo rsql re
 
 # to allow reverse numeric sort and numeric sort
 # as opposed to lexicographic sort
