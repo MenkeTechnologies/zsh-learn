@@ -51,6 +51,7 @@ function sef(){
     se | tac | fzf --ansi
 }
 
+# stop common typos
 alias es=se
 alias ses=se
 alias sse=se
