@@ -7,6 +7,8 @@
 ##### Purpose: zsh script to learn
 ##### Notes:
 #}}}***********************************************************
+
+
 test -z "$ZPWR_SEND_KEYS_FULL" && export ZPWR_SEND_KEYS_FULL=false
 test -z "$ZPWR_TEMPFILE_SQL" && export ZPWR_TEMPFILE_SQL="/tmp/.zpwr-sql-temp"
 test -z "$ZPWR_SCHEMA_NAME" && export ZPWR_SCHEMA_NAME="root"
@@ -229,28 +231,47 @@ function learn(){
         return 1
     fi
 }
+function getLastItem(){
+    id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | tail -n 1)
+    if [[ -z $id ]]; then
+        continue
+    fi
+    item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
+    item=${item//\'/\\\'}
+}
+
+function getItems(){
+    if echo $num | grep -qsE '\d+'; then
+        #int
+        id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | perl -ne "print if \$. == quotemeta('$num')")
+        if [[ -z $id ]]; then
+            continue
+        fi
+        item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
+        item=${item//\'/\\\'\'}
+
+        echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$item"''"" where id=$id' | mysql"
+    else
+        #regex
+        ids=$(echo "select id,learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | perl -lne 'do{$id=$1;$l=$2;print "$id $l" if $l =~ m{'$num'}i} if m{^(\d+)\s(.*)$}')
+        for item in ${(f)ids[@]}; do
+            id=${item%% *}
+            learn=${item#* }
+            learn=${learn//\'/\\\'\'}
+            echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$learn"''"" where id=$id' | mysql"
+        done
+    fi
+}
 
 function rsql(){
     printf ""> "$ZPWR_TEMPFILE_SQL"
     if [[ -z "$1" ]]; then
-            id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | tail -n 1)
-            if [[ -z $id ]]; then
-                continue
-            fi
-            item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
-            item=${item//\'/\\\'}
+            getLastItem
 
             echo "update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = '$item' where id=$id" >> "$ZPWR_TEMPFILE_SQL"
     else
         for num in $@; do
-            id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | perl -ne "print if \$. == quotemeta('$num')")
-            if [[ -z $id ]]; then
-                continue
-            fi
-            item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
-            item=${item//\'/\\\'}
-
-            echo "update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = '$item' where id=$id"
+            getItems
         done >> "$ZPWR_TEMPFILE_SQL"
     fi
 
@@ -268,24 +289,12 @@ function rsql(){
 function redo(){
     echo > "$ZPWR_TEMPFILE"
     if [[ -z "$1" ]]; then
-            id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | tail -n 1)
-            if [[ -z $id ]]; then
-                continue
-            fi
-            item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
-            item=${item//\'/\\\'\'}
+            getLastItem
 
             echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$item"''"" where id=$id' | mysql" >> "$ZPWR_TEMPFILE"
     else
         for num in $@; do
-            id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | perl -ne "print if \$. == quotemeta('$num')")
-            if [[ -z $id ]]; then
-                continue
-            fi
-            item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
-            item=${item//\'/\\\'\'}
-
-            echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$item"''"" where id=$id' | mysql"
+            getItems
         done >> "$ZPWR_TEMPFILE"
     fi
 
