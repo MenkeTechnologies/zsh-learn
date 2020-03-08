@@ -264,6 +264,7 @@ function getItems(){
 }
 
 function rsql(){
+    local id item ids learn
     printf ""> "$ZPWR_TEMPFILE_SQL"
     if [[ -z "$1" ]]; then
             getLastItem
@@ -287,6 +288,7 @@ function rsql(){
 }
 
 function redo(){
+    local id item ids learn
     echo > "$ZPWR_TEMPFILE"
     if [[ -z "$1" ]]; then
             getLastItem
