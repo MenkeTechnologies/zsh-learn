@@ -55,8 +55,11 @@ function sef(){
 
 # stop common typos
 alias es=se
+alias ees=se
 alias ses=se
+alias ese=se
 alias sse=se
+alias ssee=se
 alias re=redo
 
 function se(){
