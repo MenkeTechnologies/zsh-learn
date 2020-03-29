@@ -20,7 +20,7 @@ test -z "$ZPWR_LOGFILE" && export ZPWR_LOGFILE="/tmp/.zpwr-log"
 test -z "$ZPWR_CHAR_LOGO" && export ZPWR_CHAR_LOGO="<<)(>>"
 
 
-function le(){
+function savel(){
     test -z "$1" && return 1
     category="programming"
     learning="$(printf -- '%s' "$1" | sed 's@^[[:space:]]*@@;s@[[:space:]]*$@@')"
@@ -32,7 +32,7 @@ function le(){
 }
 
 
-function seee(){
+function searchlee(){
     if test -z "$1"; then
         echo "select id, dateAdded,learning,category from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql 2>> $ZPWR_LOGFILE | cat -n
     else
@@ -53,16 +53,7 @@ function sef(){
     se | tac | fzf --ansi
 }
 
-# stop common typos
-alias es=se
-alias ees=se
-alias ses=se
-alias ese=se
-alias sse=se
-alias ssee=se
-alias re=redo
-
-function se(){
+function searchl(){
     if test -z "$1"; then
         if [[ "$ZPWR_COLORS" = true ]]; then
             echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" |
@@ -99,7 +90,7 @@ function qu(){
     ser | fzf -m --ansi
 }
 
-function see(){
+function searchle(){
     if test -z "$1"; then
         if [[ "$ZPWR_COLORS" = true ]]; then
             echo "select learning,category from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" |
@@ -266,7 +257,7 @@ function getItems(){
     fi
 }
 
-function rsql(){
+function redosql(){
     local id item ids learn
     printf ""> "$ZPWR_TEMPFILE_SQL"
     if [[ -z "$1" ]]; then
@@ -312,4 +303,17 @@ zle -N learn
 bindkey -M viins '^k' learn
 bindkey -M vicmd '^k' learn
 
+# stop common typos
+alias le='noglob savel'
+alias es='noglob searchl'
+alias ees='noglob searchl'
+alias ses='noglob searchl'
+alias ese='noglob searchl'
+alias sse='noglob searchl'
+alias ssee='noglob searchl'
+alias re='noglob redo'
+alias rql='noglob redosql'
+alias see='noglob searchle'
+alias seee='noglob searchlee'
+alias se='noglob searchl'
 
