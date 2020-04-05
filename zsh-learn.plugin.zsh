@@ -53,7 +53,7 @@ function sef(){
     searchl |
         tac |
         fzf --ansi -m |
-        perl -ane 'BEGIN{print "redo " if <>};print $F[0]." "' |
+        perl -ane 'BEGIN{$c=0} print "redo " if ++$c == 1;print $F[0]." "' |
         source /dev/stdin
 
 
