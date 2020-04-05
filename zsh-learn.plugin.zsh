@@ -19,7 +19,6 @@ test -z "$ZPWR_TEMPFILE2" && export ZPWR_TEMPFILE2="/tmp/.zpwr-temp2"
 test -z "$ZPWR_LOGFILE" && export ZPWR_LOGFILE="/tmp/.zpwr-log"
 test -z "$ZPWR_CHAR_LOGO" && export ZPWR_CHAR_LOGO="<<)(>>"
 
-
 function savel(){
     test -z "$1" && return 1
     category="programming"
@@ -55,8 +54,6 @@ function sef(){
         fzf --ansi -m |
         perl -ane 'BEGIN{$c=0} print "redo " if ++$c == 1;print $F[0]." "' |
         source /dev/stdin
-
-
 }
 
 function searchl(){
@@ -322,4 +319,27 @@ alias rsql='noglob redosql'
 alias see='noglob searchle'
 alias seee='noglob searchlee'
 alias se='noglob searchl'
+
+if (( ${+ZPWR_VERBS} )); then
+    ZPWR_VERBS[se]='searchl=search the learning collection'
+    ZPWR_VERBS[searchl]='searchl=search the learning collection'
+
+    ZPWR_VERBS[see]='searchle=category search the learning collection'
+    ZPWR_VERBS[searchle]='searchle=category search the learning collection'
+    
+    ZPWR_VERBS[seee]='searchlee=timestamp search the learning collection'
+    ZPWR_VERBS[searchlee]='searchlee=timestamp search the learning collection'
+
+    ZPWR_VERBS[re]='redo=redo the learning collection'
+    ZPWR_VERBS[redo]='redo=redo the learning collection'
+
+    ZPWR_VERBS[rsql]='redosql=redo into vim the learning collection'
+    ZPWR_VERBS[redosql]='redosql=redo into vim the learning collection'
+
+    ZPWR_VERBS[ser]='ser=random search the learning collection'
+
+    ZPWR_VERBS[quiz]='qu=quiz from the learning collection'
+
+    ZPWR_VERBS[sef]='sef=search into fzf the learning collection'
+fi
 
