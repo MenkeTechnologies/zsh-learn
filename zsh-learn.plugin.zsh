@@ -53,7 +53,7 @@ function sef(){
     searchl |
         tac |
         fzf --ansi -m |
-        perl -ane 'BEGIN{print "print -z redo "};print $F[0]." "' |
+        perl -ane 'BEGIN{print "redo "};print $F[0]." "' |
         source /dev/stdin
 
 
