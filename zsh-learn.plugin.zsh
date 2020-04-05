@@ -50,7 +50,13 @@ function ser(){
 }
 
 function sef(){
-    searchl | tac | fzf --ansi
+    searchl |
+        tac |
+        fzf --ansi -m |
+        perl -ane 'BEGIN{print "print -z redo "};print $F[0]." "' |
+        source /dev/stdin
+
+
 }
 
 function searchl(){
