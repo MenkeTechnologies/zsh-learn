@@ -46,11 +46,11 @@ function ser(){
         num=$1
     fi
 
-    se | shuf -n $num
+    searchl | shuf -n $num
 }
 
 function sef(){
-    se | tac | fzf --ansi
+    searchl | tac | fzf --ansi
 }
 
 function searchl(){
@@ -174,7 +174,7 @@ zstyle ':completion:*:*:(se|redo|rsql|z|r|re):*:*' sort false
 # rsql ;<tab>
 function _fzf_complete_rsql() {
   FZF_COMPLETION_OPTS= _fzf_complete '-m --ansi' "$@" < <(
-        se | tac
+        searchl | tac
     )
 }
 
@@ -185,7 +185,7 @@ function _fzf_complete_rsql_post() {
 # se ;<tab>
 function _fzf_complete_se() {
   FZF_COMPLETION_OPTS= _fzf_complete '-m --ansi' "$@" < <(
-        se | tac
+        searchl | tac
     )
 }
 
@@ -196,7 +196,7 @@ function _fzf_complete_se_post() {
 # redo ;<tab>
 function _fzf_complete_redo() {
   FZF_COMPLETION_OPTS= _fzf_complete '-m --ansi' "$@" < <(
-        se | tac
+        searchl | tac
     )
 }
 
