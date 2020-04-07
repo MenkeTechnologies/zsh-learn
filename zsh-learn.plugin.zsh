@@ -337,3 +337,9 @@ if (( ${+ZPWR_VERBS} )); then
     ZPWR_VERBS[sef]='sef=search into fzf the learning collection'
 fi
 
+compdef _se se see seee redo rsql re searchl searchle searchlee redosql
+# to allow reverse numeric sort and numeric sort
+# as opposed to lexicographic sort
+zstyle ':completion:*:*:(se|see|seee|redo|rsql|re|searchl|searchle|searchlee|z|r):*:*' sort false
+
+
