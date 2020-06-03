@@ -85,6 +85,11 @@ function searchlee(){
     fi
 }
 
+function sera(){
+
+    searchl | shuf
+}
+
 function ser(){
 
     local num=100
@@ -138,9 +143,19 @@ function searchl(){
     fi
 
 }
+
+function qua(){
+
+    sera $num | fzf -m --ansi
+}
+
 function qu(){
 
-    ser | fzf -m --ansi
+    local num=100
+    if [[ -n "$1" ]]; then
+        num=$1
+    fi
+    ser $num | fzf -m --ansi
 }
 
 function searchle(){
