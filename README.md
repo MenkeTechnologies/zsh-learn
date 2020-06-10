@@ -37,11 +37,21 @@ Selects learning, category and date columns from all records from the learning t
 Selects learning column from 100 random records from the learning table
 First arg is number of random records
 
+- sera(short for search random all)
+
+
+Selects learning column from all random records from the learning table
+
 - qu(short for quiz)
 
 
 Selects learning column from 100 random records from the learning table into fzf
 First arg is number of random records
+
+- qua(short for quiz all)
+
+
+Selects learning column from alll random records from the learning table into fzf
 
 
 - redo
