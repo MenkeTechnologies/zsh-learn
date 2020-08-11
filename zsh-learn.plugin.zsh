@@ -8,6 +8,9 @@
 ##### Notes:
 #}}}***********************************************************
 
+if ! (( $+ZPWR_VARS )); then
+    declare -A ZPWR_VARS
+fi
 
 test -z "$ZPWR_SEND_KEYS_FULL" && export ZPWR_SEND_KEYS_FULL=false
 test -z "$ZPWR_TEMPFILE_SQL" && export ZPWR_TEMPFILE_SQL="/tmp/.zpwr-sql-temp"
@@ -39,7 +42,7 @@ if (( ${+ZPWR_VERBS} )); then
 
     ZPWR_VERBS[see]='searchle=category search the learning collection'
     ZPWR_VERBS[searchle]='searchle=category search the learning collection'
-    
+
     ZPWR_VERBS[seee]='searchlee=timestamp search the learning collection'
     ZPWR_VERBS[searchlee]='searchlee=timestamp search the learning collection'
 
@@ -65,6 +68,8 @@ zstyle ':completion:*:*:(se|see|seee|redo|rsql|re|searchl|searchle|searchlee|z|r
 
 function savel(){
 
+    local category learning
+
     test -z "$1" && return 1
     category="programming"
     learning="$(printf -- '%s' "$1" | sed 's@^[[:space:]]*@@;s@[[:space:]]*$@@')"
@@ -72,6 +77,7 @@ function savel(){
     if [[ -n "$2" ]]; then
         category="$2"
     fi
+
     echo "insert into $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME (category, learning, dateAdded) values ('"$category"', '""$learning""', now())" | mysql 2>> "$ZPWR_LOGFILE"
 }
 
@@ -111,6 +117,8 @@ function sef(){
 
 function searchl(){
 
+    local arg argdollar
+
     if test -z "$1"; then
         if [[ "$ZPWR_COLORS" = true ]]; then
             echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" |
@@ -146,12 +154,14 @@ function searchl(){
 
 function qua(){
 
-    sera $num | fzf -m --ansi
+    sera | fzf -m --ansi
 }
 
 function qu(){
 
-    local num=100
+    local num
+    num=100
+
     if [[ -n "$1" ]]; then
         num=$1
     fi
@@ -159,6 +169,8 @@ function qu(){
 }
 
 function searchle(){
+
+    local arg argdollar
 
     if test -z "$1"; then
         if [[ "$ZPWR_COLORS" = true ]]; then
@@ -278,6 +290,8 @@ function _fzf_complete_redo_post() {
 
 function learn(){
 
+    local mywords learning
+
     if [[ ! -z "$BUFFER" ]]; then
 
         mywords=("${(z)BUFFER}")
@@ -297,28 +311,31 @@ function learn(){
         return 1
     fi
 }
+
 function getLastItem(){
 
-    id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | tail -n 1)
-    if [[ -z $id ]]; then
+    ZPWR_VARS[id]=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | tail -n 1)
+    if [[ -z $ZPWR_VARS[id] ]]; then
         continue
     fi
-    item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
-    item=${item//\'/\\\'}
+    ZPWR_VARS[item]=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$ZPWR_VARS[id]" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
+    ZPWR_VARS[item]=${ZPWR_VARS[item]//\'/\\\'}
 }
 
 function getItems(){
 
+    local ids item id learn
+
     if echo $num | grep -qsE '^\d+$'; then
         #int
-        id=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | perl -ne "print if \$. == quotemeta('$num')")
-        if [[ -z $id ]]; then
+        ZPWR_VARS[id]=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | perl -ne "print if \$. == quotemeta('$num')")
+        if [[ -z $ZPWR_VARS[id] ]]; then
             continue
         fi
-        item=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$id" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
-        item=${item//\'/\\\'\'}
+        ZPWR_VARS[item]=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$ZPWR_VARS[id]" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
+        ZPWR_VARS[item]=${ZPWR_VARS[item]//\'/\\\'\'}
 
-        echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$item"''"" where id=$id' | mysql"
+        echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$ZPWR_VARS[item]"''"" where id=$ZPWR_VARS[id]' | mysql"
     else
         #regex
         ids=$(echo "select id,learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | perl -lne 'do{$id=$1;$l=$2;print "$id $l" if $l =~ m{'$num'}i} if m{^(\d+)\s(.*)$}')
@@ -333,12 +350,12 @@ function getItems(){
 
 function redosql(){
 
-    local id item ids learn
+    local id item ids learn num
     printf ""> "$ZPWR_TEMPFILE_SQL"
     if [[ -z "$1" ]]; then
             getLastItem
 
-            echo "update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = '$item' where id=$id" >> "$ZPWR_TEMPFILE_SQL"
+            echo "update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = '$ZPWR_VARS[item]' where id=$ZPWR_VARS[id]" >> "$ZPWR_TEMPFILE_SQL"
     else
         for num in $@; do
             getItems
@@ -357,13 +374,13 @@ function redosql(){
 }
 
 function redo(){
-    
-    local id item ids learn
+
+    local ids learn num
     echo > "$ZPWR_TEMPFILE"
     if [[ -z "$1" ]]; then
             getLastItem
 
-            echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$item"''"" where id=$id' | mysql" >> "$ZPWR_TEMPFILE"
+            echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$ZPWR_VARS[item]"''"" where id=$ZPWR_VARS[id]' | mysql" >> "$ZPWR_TEMPFILE"
     else
         for num in $@; do
             getItems
