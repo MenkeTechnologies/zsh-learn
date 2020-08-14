@@ -1,9 +1,11 @@
 # zsh-learn
 
 
-This plugin contain all functionality to have a a learning collection stored in MySQL/MariadB.
+This plugin contains functionality to have a a learning collection stored in MySQL/MariadB to store everything you learn.
+I stored code snippets and other technicall information in my learning collection.
+This helps initial learning, recall and relearning.
 
-## functions
+## Functions
 
 - le (short for learn)
 
@@ -70,7 +72,7 @@ One or more args are the number order records to print to prompt
 Creates the learning table, generates DDL
 
 
-## keybindings
+## ZLE Keybindings
 ```sh
 bindkey -M viins '^k' learn
 bindkey -M vicmd '^k' learn
