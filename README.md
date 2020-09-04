@@ -1,7 +1,7 @@
 # zsh-learn
 
 
-This plugin contains functionality to have a a learning collection stored in MySQL/MariadB to store everything you learn.
+This plugin contains functionality to have a learning collection in MySQL/MariadB to save, query and quiz everything you learn.
 I stored code snippets and other technicall information in my learning collection.
 This helps initial learning, recall and relearning.
 
