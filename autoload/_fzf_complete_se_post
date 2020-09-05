@@ -1,0 +1,6 @@
+function _fzf_complete_se_post() {
+
+    awk '{print $2}'
+}
+
+_fzf_complete_se_post "$@"

@@ -1,0 +1,6 @@
+function _fzf_complete_redo_post() {
+
+    awk '{print $1}'
+}
+
+_fzf_complete_redo_post "$@"

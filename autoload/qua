@@ -1,0 +1,6 @@
+function qua(){
+
+    sera | fzf -m --ansi
+}
+
+qua "$@"

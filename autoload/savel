@@ -1,0 +1,16 @@
+function savel(){
+
+    local category learning
+
+    test -z "$1" && return 1
+    category="programming"
+    learning="$(printf -- '%s' "$1" | sed 's@^[[:space:]]*@@;s@[[:space:]]*$@@')"
+
+    if [[ -n "$2" ]]; then
+        category="$2"
+    fi
+
+    echo "insert into $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME (category, learning, dateAdded) values ('"$category"', '""$learning""', now())" | mysql 2>> "$ZPWR_LOGFILE"
+}
+
+savel "$@"

@@ -1,0 +1,12 @@
+function qu(){
+
+    local num
+    num=100
+
+    if [[ -n "$1" ]]; then
+        num=$1
+    fi
+    ser $num | fzf -m --ansi
+}
+
+qu "$@"

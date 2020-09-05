@@ -1,0 +1,10 @@
+function getLastItem(){
+
+    ZPWR_VARS[id]=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | tail -n 1)
+    if [[ -z $ZPWR_VARS[id] ]]; then
+        continue
+    fi
+    ZPWR_VARS[item]=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$ZPWR_VARS[id]" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
+    ZPWR_VARS[item]=${ZPWR_VARS[item]//\'/\\\'}
+}
+getLastItem "$@"

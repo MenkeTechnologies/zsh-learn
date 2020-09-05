@@ -1,0 +1,11 @@
+function ser(){
+
+    local num=100
+    if [[ -n "$1" ]]; then
+        num=$1
+    fi
+
+    searchl | shuf -n $num
+}
+
+ser "$@"

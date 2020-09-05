@@ -1,0 +1,7 @@
+function del(){
+
+    [[ -z "$1" ]] && count=1 || count="$1"
+    echo "delete from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by id desc limit $count" | mysql
+}
+
+del "$@"

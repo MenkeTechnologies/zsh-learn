@@ -1,0 +1,25 @@
+function learn(){
+
+    local mywords learning
+
+    if [[ ! -z "$BUFFER" ]]; then
+
+        mywords=("${(z)BUFFER}")
+        if [[ "${mywords[1]}" == le ]];then
+            return 1
+        fi
+
+        learning="$(print -- "$BUFFER" | perl -pe 's@\x0a@\x20@' | perl -pe 's@^\x20+|\x20+$@@g;s@\x20+@\x20@g')"
+
+        BUFFER="le '${learning//'/\''}'"
+
+        if [[ $ZPWR_SEND_KEYS_FULL == false ]]; then
+            type -- "keyClear" &>/dev/null && keyClear
+            zle .accept-line
+        fi
+    else
+        return 1
+    fi
+}
+
+learn "$@"

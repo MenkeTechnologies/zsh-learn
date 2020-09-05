@@ -1,0 +1,6 @@
+function sera(){
+
+    searchl | shuf
+}
+
+sera "$@"

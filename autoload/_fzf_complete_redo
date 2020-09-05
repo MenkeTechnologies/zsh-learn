@@ -1,0 +1,9 @@
+# redo ;<tab>
+function _fzf_complete_redo() {
+
+  FZF_COMPLETION_OPTS= _fzf_complete '-m --ansi' "$@" < <(
+        searchl | tac
+    )
+}
+
+_fzf_complete_redo "$@"

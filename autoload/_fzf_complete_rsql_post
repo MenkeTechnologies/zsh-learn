@@ -1,0 +1,6 @@
+function _fzf_complete_rsql_post() {
+
+    awk '{print $1}'
+}
+
+_fzf_complete_rsql_post "$@"

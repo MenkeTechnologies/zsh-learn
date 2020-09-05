@@ -1,0 +1,25 @@
+function redosql(){
+
+    local id item ids learn num
+    printf ""> "$ZPWR_TEMPFILE_SQL"
+    if [[ -z "$1" ]]; then
+            getLastItem
+
+            echo "update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = '$ZPWR_VARS[item]' where id=$ZPWR_VARS[id]" >> "$ZPWR_TEMPFILE_SQL"
+    else
+        for num in $@; do
+            getItems
+        done >> "$ZPWR_TEMPFILE_SQL"
+    fi
+
+    if [[ $ZPWR_USE_NEOVIM == true ]]; then
+        nvim "$ZPWR_TEMPFILE_SQL"
+        cat "$ZPWR_TEMPFILE_SQL" | mysql
+        command rm "$ZPWR_TEMPFILE_SQL"
+    else
+        vim "$ZPWR_TEMPFILE_SQL"
+        cat "$ZPWR_TEMPFILE_SQL" | mysql
+        command rm "$ZPWR_TEMPFILE_SQL"
+    fi
+}
+redosql "$@"
