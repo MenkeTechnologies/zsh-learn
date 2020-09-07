@@ -64,18 +64,20 @@ fi
 
 # to allow reverse numeric sort and numeric sort
 # as opposed to lexicographic sort
-zstyle ':completion:*:*:(se|see|seee|redo|rsql|re|searchl|searchle|searchlee|z|r):*:*' sort false
+if [[ $ZPWR_LEARN != false ]]; then
+    zstyle ':completion:*:*:(se|see|seee|redo|rsql|re|searchl|searchle|searchlee|z|r):*:*' sort false
 
-zle -N learn
-bindkey -M viins '^k' learn
-bindkey -M vicmd '^k' learn
+    zle -N learn
+    bindkey -M viins '^k' learn
+    bindkey -M vicmd '^k' learn
 
-0="${${0:#$ZSH_ARGZERO}:-${(%):-%N}}"
-0="${${(M)0:#/*}:-$PWD/$0}"
+    0="${${0:#$ZSH_ARGZERO}:-${(%):-%N}}"
+    0="${${(M)0:#/*}:-$PWD/$0}"
 
-# comps
-fpath=("${0:h}/src" $fpath)
+    # comps
+    fpath=("${0:h}/src" $fpath)
 
-# util fns
-fpath=("${0:h}/autoload" $fpath)
-autoload -Uz "${0:h}/autoload/"*(.:t)
+    # util fns
+    fpath=("${0:h}/autoload" $fpath)
+    autoload -Uz "${0:h}/autoload/"*(.:t)
+fi
