@@ -7,14 +7,14 @@ function learn(){
         mywords=("${(z)BUFFER}")
         if [[ "${mywords[1]}" == le ]];then
             printf "\x1b[0;1;31m"
-            zle -R "ERROR: First word cannot be 'le'." && read -k 1
+            zle -R "Zsh-Learn ERROR: First word cannot be 'le'." && read -k 1
             printf "\x1b[0m"
             return 1
         fi
 
         if [[ "$BUFFER" =~ "echo 'update[[:space:]]+.*set[[:space:]]+" ]];then
             printf "\x1b[0;1;31m"
-            zle -R "ERROR: Cannot duplicate learning echo 'update ... set...'." && read -k 1
+            zle -R "Zsh-Learn ERROR: Cannot duplicate learning echo 'update ... set...'." && read -k 1
             printf "\x1b[0m"
             return 1
         fi
@@ -28,6 +28,9 @@ function learn(){
             zle .accept-line
         fi
     else
+        printf "\x1b[0;1;31m"
+        zle -R "Zsh-Learn ERROR: Cannot learn empty BUFFER." && read -k 1
+        printf "\x1b[0m"
         return 1
     fi
 }
