@@ -5,6 +5,14 @@ This plugin contains functionality to have a learning collection in MySQL/Mariad
 I stored code snippets and other technicall information in my learning collection.
 This helps initial learning, recall and relearning.
 
+## Install for Zinit
+> `~/.zshrc`
+```sh
+source "$HOME/.zinit/bin/zinit.zsh"
+zinit ice lucid nocompile
+zinit load MenkeTechnologies/zsh-learn
+```
+
 ## Functions
 
 - le (short for learn)
