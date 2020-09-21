@@ -2,7 +2,7 @@
 
 
 This plugin contains functionality to have a learning collection in MySQL/MariadB to save, query and quiz everything you learn.
-I stored code snippets and other technical information in my learning collection.
+I store code snippets and other technical information in my personal learning collection.
 This helps initial learning, recall and relearning for permanent knowledge.
 
 ## Install for Zinit
