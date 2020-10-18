@@ -1,3 +1,5 @@
+# -*- mode: sh -*-
+# vim: set ft=sh:
 function _fzf_complete_se_post() {
 
     awk '{print $2}'

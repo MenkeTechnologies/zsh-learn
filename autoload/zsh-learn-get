@@ -1,13 +1,12 @@
 # -*- mode: sh -*-
 # vim: set ft=sh:
-function redo(){
+function zsh-learn-get(){
 
     local ids learn num
     echo > "$ZPWR_TEMPFILE"
     if [[ -z "$1" ]]; then
-            getLastItem
-
-            echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$ZPWR_VARS[item]"''"" where id=$ZPWR_VARS[id]' | mysql" >> "$ZPWR_TEMPFILE"
+        getLastItem
+        echo "$ZPWR_VARS[item]" >> "$ZPWR_TEMPFILE"
     else
         for num in $@; do
             getItems none
@@ -18,4 +17,4 @@ function redo(){
     command rm "$ZPWR_TEMPFILE"
 }
 
-redo "$@"
+zsh-learn-get "$@"

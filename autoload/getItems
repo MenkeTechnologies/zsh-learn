@@ -1,6 +1,9 @@
+# -*- mode: sh -*-
+# vim: set ft=sh:
 function getItems(){
 
     local ids item id learn
+    local format="$1"
 
     if echo $num | grep -qsE '^\d+$'; then
         #int
@@ -11,7 +14,11 @@ function getItems(){
         ZPWR_VARS[item]=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$ZPWR_VARS[id]" | mysql 2>> $ZPWR_LOGFILE | tail -n 1)
         ZPWR_VARS[item]=${ZPWR_VARS[item]//\'/\\\'\'}
 
-        echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$ZPWR_VARS[item]"''"" where id=$ZPWR_VARS[id]' | mysql"
+        if [[ $format == none ]]; then
+            echo "$ZPWR_VARS[item]"
+        else
+            echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$ZPWR_VARS[item]"''"" where id=$ZPWR_VARS[id]' | mysql"
+        fi
     else
         #regex
         ids=$(echo "select id,learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql | perl -lne 'do{$id=$1;$l=$2;print "$id $l" if $l =~ m{'$num'}i} if m{^(\d+)\s(.*)$}')
@@ -19,7 +26,11 @@ function getItems(){
             id=${item%% *}
             learn=${item#* }
             learn=${learn//\'/\\\'\'}
-            echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$learn"''"" where id=$id' | mysql"
+            if [[ $format == none ]]; then
+                echo "$learn"
+            else
+                echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$learn"''"" where id=$id' | mysql"
+            fi
         done
     fi
 }

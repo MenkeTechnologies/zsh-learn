@@ -1,3 +1,5 @@
+# -*- mode: sh -*-
+# vim: set ft=sh:
 function createLearningCollection(){
 
     alternatingPrettyPrint "Creating$ZPWR_DELIMITER_CHAR $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME$ZPWR_DELIMITER_CHAR with$ZPWR_DELIMITER_CHAR MySQL$ZPWR_DELIMITER_CHAR"
