@@ -3,13 +3,13 @@
 function _se(){
 
     local items
-    items="$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql 2>/dev/null)"
+    items="$(print -r -- "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql 2>/dev/null)"
 
-    eval "learn_ary=( $( echo ${items[@]} | perl -e '@a=();$c=0;do{chomp;push(@ary,++$c.":".quotemeta($_))}for<>;$c=0;do{print "$_ " if $c++ < 1000}for reverse @ary') )"
+    eval "learn_ary=( $( print -r -- "${items[@]}" | perl -e '@a=();$c=0;do{chomp;push(@ary,++$c.":".quotemeta($_))}for<>;$c=0;do{print "$_ " if $c++ < 1000}for reverse @ary') )"
 
     _describe -t zsh-learn-id 'learning id' learn_ary
 
-    eval "learn_ary=( $(echo ${items[@]} | perl -e '@a=();$c=0;do{chomp;push(@ary,quotemeta($_).":".++$c)}for<>;$c=0;do{print "$_ " if $c++ < 1000}for reverse @ary') )"
+    eval "learn_ary=( $(print -r -- "${items[@]}" | perl -e '@a=();$c=0;do{chomp;push(@ary,quotemeta($_).":".++$c)}for<>;$c=0;do{print "$_ " if $c++ < 1000}for reverse @ary') )"
 
     _describe -t zsh-learn-text 'learning text' learn_ary
 }
