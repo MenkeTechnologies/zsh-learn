@@ -49,6 +49,7 @@ if (( ${+ZPWR_VERBS} )); then
     ZPWR_VERBS[seee]='searchlee=timestamp search the learning collection'
     ZPWR_VERBS[searchlee]='searchlee=timestamp search the learning collection'
 
+    ZPWR_VERBS[get]='zsh-learn-get=get learning items'
     ZPWR_VERBS[re]='redo=redo the learning collection'
     ZPWR_VERBS[redo]='redo=redo the learning collection'
 
@@ -65,7 +66,8 @@ fi
 # to allow reverse numeric sort and numeric sort
 # as opposed to lexicographic sort
 if [[ $ZPWR_LEARN != false ]]; then
-    zstyle ':completion:*:*:(se|see|seee|redo|rsql|re|searchl|searchle|searchlee|z|r):*:*' sort false
+    zstyle ':completion:*:*:(se|see|seee|redo|rsql|re|searchl|searchle|searchlee|z|r|zsh-learn-get):*:*' sort false
+    zstyle ':completion:*:*:(zpwr-se|zpwr-see|zpwr-seee|zpwr-redo|zpwr-rsql|zpwr-re|zpwr-searchl|zpwr-searchle|zpwr-searchlee|zpwr-r|zpwr-get):*:*' sort false
 
     zle -N learn
     bindkey -M viins '^k' learn
