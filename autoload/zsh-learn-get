@@ -3,7 +3,7 @@
 function zsh-learn-get(){
 
     local ids learn num
-    echo > "$ZPWR_TEMPFILE"
+    printf "" > "$ZPWR_TEMPFILE"
     if [[ -z "$1" ]]; then
         getLastItem
         echo "$ZPWR_VARS[item]" >> "$ZPWR_TEMPFILE"
