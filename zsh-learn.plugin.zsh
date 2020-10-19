@@ -13,6 +13,8 @@ if ! (( $+ZPWR_VARS )); then
     declare -A ZPWR_VARS
 fi
 
+ZPWR_VARS[maxRecords]=2000
+
 test -z "$ZPWR_SEND_KEYS_FULL" && export ZPWR_SEND_KEYS_FULL=false
 test -z "$ZPWR_TEMPFILE_SQL" && export ZPWR_TEMPFILE_SQL="/tmp/.zpwr-sql-temp"
 test -z "$ZPWR_SCHEMA_NAME" && export ZPWR_SCHEMA_NAME="root"
