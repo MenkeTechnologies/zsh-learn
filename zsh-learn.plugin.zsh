@@ -71,7 +71,7 @@ if [[ $ZPWR_LEARN != false ]]; then
     zstyle ':completion:*:*:(se|see|seee|redo|rsql|re|searchl|searchle|searchlee|z|r|zsh-learn-get):*:*' sort false
     zstyle ':completion:*:*:(zpwr-se|zpwr-see|zpwr-seee|zpwr-redo|zpwr-rsql|zpwr-re|zpwr-searchl|zpwr-searchle|zpwr-searchlee|zpwr-r|zpwr-get):*:*' sort false
 
-    zstyle ':completion:*:*:*:*:*' group-order zsh-learn-id zsh-learn-text
+    zstyle ':completion:*:*:*:*:(zsh-learn-id|zsh-learn-text)' group-order zsh-learn-id zsh-learn-text
 
     zstyle ':completion:*:zsh-learn-id' list-colors '=(#b)(*)=1;30=1;36;44'
     zstyle ':completion:*:zsh-learn-text' list-colors '=(#b)(*)=1;30=1;34;43;4'
