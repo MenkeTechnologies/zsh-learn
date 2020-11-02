@@ -43,10 +43,10 @@ function searchl(){
             out="$(cat $ZPWR_TEMPFILE3)"
 
             for term in "$@" ; do
-                out="$(printf $out | command grep --color=always -i -E -- "$term")"
+                out="$(print -r -- $out | command grep --color=always -i -E -- "$term")"
             done
 
-            printf "$out"
+            print -r -- "$out"
         fi
 
         command rm $ZPWR_TEMPFILE $ZPWR_TEMPFILE2
