@@ -1,7 +1,7 @@
 # zsh-learn
 
 
-This plugin contains functionality to have a learning collection in MySQL/MariadB to save, query and quiz everything you learn.
+This plugin contains functionality to have a learning collection in MySQL/MariaDB to save, query and quiz everything you learn.
 I store code snippets and other technical information in my personal learning collection.
 This helps initial learning, recall and relearning for permanent knowledge.
 
@@ -11,6 +11,15 @@ This helps initial learning, recall and relearning for permanent knowledge.
 source "$HOME/.zinit/bin/zinit.zsh"
 zinit ice lucid nocompile
 zinit load MenkeTechnologies/zsh-learn
+```
+
+You change the database command to run by exporting this environment variable with a custom database command.  The default command is mysql.
+```sh
+export ZPWR_LEARN_COMMAND=mysql
+```
+For example with MariaDB unix auth plugin you would change to:
+```sh
+export ZPWR_LEARN_COMMAND='sudo mysql'
 ```
 
 ## Functions

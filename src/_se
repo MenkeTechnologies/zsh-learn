@@ -4,7 +4,7 @@ function _se(){
 
     local items
     local m
-    items="$(print -r -- "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql 2>/dev/null)"
+    items="$(print -r -- "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | ${=ZPWR_LEARN_COMMAND} 2>/dev/null)"
 
     eval "learn_ary=( $( print -r -- "${items[@]}" | perl -e '@a=();$c=0;do{chomp;push(@ary,++$c.":".quotemeta($_))}for<>;$c=0;do{print "$_ " if $c++ < '$ZPWR_VARS[maxRecords]'}for reverse @ary') )"
 
