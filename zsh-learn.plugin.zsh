@@ -24,6 +24,7 @@ test -z "$ZPWR_TEMPFILE" && export ZPWR_TEMPFILE="/tmp/.zpwr-temp"
 test -z "$ZPWR_TEMPFILE2" && export ZPWR_TEMPFILE2="/tmp/.zpwr-temp2"
 test -z "$ZPWR_LOGFILE" && export ZPWR_LOGFILE="/tmp/.zpwr-log"
 test -z "$ZPWR_CHAR_LOGO" && export ZPWR_CHAR_LOGO="<<)(>>"
+test -z "$ZPWR_LEARN_COMMAND" && export ZPWR_LEARN_COMMAND='mysql'
 
 # stop common typos
 alias le='noglob savel'

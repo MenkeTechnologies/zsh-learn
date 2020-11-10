@@ -16,11 +16,11 @@ function redosql(){
 
     if [[ $ZPWR_USE_NEOVIM == true ]]; then
         nvim "$ZPWR_TEMPFILE_SQL"
-        cat "$ZPWR_TEMPFILE_SQL" | mysql
+        cat "$ZPWR_TEMPFILE_SQL" | ${=ZPWR_LEARN_COMMAND}
         command rm "$ZPWR_TEMPFILE_SQL"
     else
         vim "$ZPWR_TEMPFILE_SQL"
-        cat "$ZPWR_TEMPFILE_SQL" | mysql
+        cat "$ZPWR_TEMPFILE_SQL" | ${=ZPWR_LEARN_COMMAND}
         command rm "$ZPWR_TEMPFILE_SQL"
     fi
 }

@@ -8,10 +8,10 @@ function searchl(){
 
         if [[ "$ZPWR_COLORS" = true ]]; then
             echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" |
-                mysql 2>> $ZPWR_LOGFILE | nl -b a -n rn -s " $ZPWR_CHAR_LOGO " | perl -pe 's@(\s*)(\d+)\s+(.*)@$1\x1b[35m$2\x1b[0m \x1b[32m$3\x1b[0m@g'
+                ${=ZPWR_LEARN_COMMAND} 2>> $ZPWR_LOGFILE | nl -b a -n rn -s " $ZPWR_CHAR_LOGO " | perl -pe 's@(\s*)(\d+)\s+(.*)@$1\x1b[35m$2\x1b[0m \x1b[32m$3\x1b[0m@g'
         else
             echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME" |
-            mysql 2>> $ZPWR_LOGFILE | nl -b a -n rn -s " $ZPWR_CHAR_LOGO "
+            ${=ZPWR_LEARN_COMMAND} 2>> $ZPWR_LOGFILE | nl -b a -n rn -s " $ZPWR_CHAR_LOGO "
         fi
 
     else
@@ -21,7 +21,7 @@ function searchl(){
         argdollar=${arg//$/\\$}
         arg=${argdollar//@/\\@}
 
-        echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | mysql 2>> "$ZPWR_LOGFILE" | nl -b a -n rz -s " $ZPWR_CHAR_LOGO " | perl -E 'open $fh, ">>", "'$ZPWR_TEMPFILE'"; open $fh2, ">>", "'$ZPWR_TEMPFILE2'";while (<>){my @F = split;if (grep m{'"$arg"'}i, "@F[1..$#F]"){say $fh "$F[0]   "; say $fh2 "@F[1..$#F]";}}';
+        echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | ${=ZPWR_LEARN_COMMAND} 2>> "$ZPWR_LOGFILE" | nl -b a -n rz -s " $ZPWR_CHAR_LOGO " | perl -E 'open $fh, ">>", "'$ZPWR_TEMPFILE'"; open $fh2, ">>", "'$ZPWR_TEMPFILE2'";while (<>){my @F = split;if (grep m{'"$arg"'}i, "@F[1..$#F]"){say $fh "$F[0]   "; say $fh2 "@F[1..$#F]";}}';
 
         if [[ -z "$2" ]]; then
 
