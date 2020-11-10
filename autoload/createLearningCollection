@@ -2,26 +2,61 @@
 # vim: set ft=sh:
 function createLearningCollection(){
 
+
+    function usage() {
+        echo "Usage :  $0 [options] [--]
+        Options:
+        -h|help       Display this message
+        -s|sudo       use sudo mysql"
+    }
+    sudoFlag=false
+
+    while getopts ":hs" opt; do
+        case $opt in
+
+        h|help)
+            usage
+            return 0
+            ;;
+        s|sudo)
+            sudoFlag=true
+            ;;
+        *)
+            printf "\n  Option does not exist : $OPTARG\n"
+            usage
+            return 1
+            ;;
+        esac
+    done
+    shift $(($OPTIND-1))
+
     alternatingPrettyPrint "Creating$ZPWR_DELIMITER_CHAR $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME$ZPWR_DELIMITER_CHAR with$ZPWR_DELIMITER_CHAR MySQL$ZPWR_DELIMITER_CHAR"
+
+    if [[ $sudoFlag == true ]]; then
+        prefix="sudo"
+    else
+        prefix=""
+    fi
+
     if [[ -n "$1" ]]; then
         #use first arg as mysql password
-        if ! echo "select * from information_schema.tables" | mysql -u root -p "$1" | command grep --color=always -q "$ZPWR_TABLE_NAME";then
+        if ! echo "select * from information_schema.tables" | $prefix mysql -u root -p "$1" | command grep --color=always -q "$ZPWR_TABLE_NAME";then
             echo  "create schema $ZPWR_SCHEMA_NAME if not exists"
-            echo  "create schema $ZPWR_SCHEMA_NAME if not exists" | mysql -u root -p "$1"
+            echo  "create schema $ZPWR_SCHEMA_NAME if not exists" | $prefix mysql -u root -p "$1"
 
             echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar(200) DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`), KEY `'"$ZPWR_TABLE_NAME"'learning_index` (`learning`))'
-            echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar(200) DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`), KEY `'"$ZPWR_TABLE_NAME"'learning_index` (`learning`))' | mysql -u root -D "$ZPWR_SCHEMA_NAME" -p "$1"
+            echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar(200) DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`), KEY `'"$ZPWR_TABLE_NAME"'learning_index` (`learning`))' | $prefix mysql -u root -D "$ZPWR_SCHEMA_NAME" -p "$1"
         else
             loggErr "$ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME already exists"
         fi
     else
         #use my.cnf
-        if ! echo "select * from information_schema.tables" | mysql | command grep --color=always -q "$ZPWR_TABLE_NAME";then
+        if ! echo "select * from information_schema.tables" | $prefix mysql | command grep --color=always -q "$ZPWR_TABLE_NAME";then
             echo  "create schema if not exists $ZPWR_SCHEMA_NAME"
-            echo  "create schema if not exists $ZPWR_SCHEMA_NAME" | mysql
+            echo  "create schema if not exists $ZPWR_SCHEMA_NAME" | $prefix mysql
 
             echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar(200) DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`), KEY `'"$ZPWR_TABLE_NAME"'learning_index` (`learning`))'
-            echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar(200) DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`), KEY `'"$ZPWR_TABLE_NAME"'learning_index` (`learning`))' | mysql -D "$ZPWR_SCHEMA_NAME"
+            echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar(200) DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`), KEY `'"$ZPWR_TABLE_NAME"'learning_index` (`learning`))' | $prefix mysql -D "$ZPWR_SCHEMA_NAME"
         else
             loggErr "$ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME already exists"
         fi
