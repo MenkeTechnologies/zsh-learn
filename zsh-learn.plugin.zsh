@@ -42,6 +42,10 @@ alias seee='noglob searchlee'
 alias se='noglob searchl'
 
 if (( ${+ZPWR_VERBS} )); then
+    ZPWR_VERBS[learn]='savel=save learning to \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME'
+    ZPWR_VERBS[createlearningcollection]='createLearningCollection=create \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME with mysql -u root'
+    ZPWR_VERBS[learnsearch]='se=search for learning in \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME'
+
     ZPWR_VERBS[se]='searchl=search the learning collection'
     ZPWR_VERBS[searchl]='searchl=search the learning collection'
 
