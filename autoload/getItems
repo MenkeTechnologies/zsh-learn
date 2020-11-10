@@ -5,7 +5,7 @@ function getItems(){
     local ids item id learn
     local format="$1"
 
-    if echo $num | grep -qsE '^\d+$'; then
+    if echo $num | grep -qsE '^[[:digit:]]+$'; then
         #int
         ZPWR_VARS[id]=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | ${=ZPWR_LEARN_COMMAND} | perl -ne "print if \$. == quotemeta('$num')")
         if [[ -z $ZPWR_VARS[id] ]]; then
