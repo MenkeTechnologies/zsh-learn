@@ -7,7 +7,7 @@ function redo(){
     if [[ -z "$1" ]]; then
             getLastItem
 
-            echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$ZPWR_VARS[item]"''"" where id=$ZPWR_VARS[id]' | ${=ZPWR_LEARN_COMMAND}" >> "$ZPWR_TEMPFILE"
+            echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$ZPWR_VARS[item]"''"" where id=$ZPWR_VARS[id]' | ${ZPWR_LEARN_COMMAND}" >> "$ZPWR_TEMPFILE"
     else
         for num in $@; do
             getItems
