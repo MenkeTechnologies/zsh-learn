@@ -21,7 +21,7 @@ function learn(){
             return 1
         fi
 
-        learning="$(print -- "$BUFFER" | perl -pe 's@\x0a@\x20@' | perl -pe 's@^\x20+|\x20+$@@g;s@\x20+@\x20@g')"
+        learning="$(print -- "$BUFFER" | perl -pe 's@[\x09\x0a]@\x20@' | perl -pe 's@^\x20+|\x20+$@@g;s@\x20+@\x20@g')"
 
         BUFFER="le '${learning//'/\''}'"
 
