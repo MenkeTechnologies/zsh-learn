@@ -30,6 +30,8 @@ function getItems(){
             learn=${learn//\'/\\\'\'}
             if [[ $format == none ]]; then
                 echo "$learn"
+            elif [[ $format == sql ]]; then
+                echo "update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = '$learn' where id=$id"
             else
                 echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$learn"''"" where id=$id' | ${ZPWR_LEARN_COMMAND}"
             fi
