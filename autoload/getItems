@@ -5,9 +5,9 @@ function getItems(){
     local ids item id learn
     local format="$1"
 
-    if echo $num | grep -qsE '^[[:digit:]]+$'; then
+    if echo $search | grep -qsE '^[[:digit:]]+$'; then
         #int
-        ZPWR_VARS[id]=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | ${=ZPWR_LEARN_COMMAND} | perl -ne "print if \$. == quotemeta('$num')")
+        ZPWR_VARS[id]=$(echo "select id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | ${=ZPWR_LEARN_COMMAND} | perl -ne "print if \$. == quotemeta('$search')")
         if [[ -z $ZPWR_VARS[id] ]]; then
             continue
         fi
@@ -23,7 +23,7 @@ function getItems(){
         fi
     else
         #regex
-        ids=$(echo "select id,learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | ${=ZPWR_LEARN_COMMAND} | perl -lne 'do{$id=$1;$l=$2;print "$id $l" if $l =~ m{'$num'}i} if m{^(\d+)\s(.*)$}')
+        ids=$(echo "select id,learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | ${=ZPWR_LEARN_COMMAND} | perl -lne 'do{$id=$1;$l=$2;print "$id $l" if $l =~ m{'$search'}i} if m{^(\d+)\s(.*)$}')
         for item in ${(f)ids[@]}; do
             id=${item%% *}
             learn=${item#* }

@@ -2,13 +2,13 @@
 # vim: set ft=sh:
 function zsh-learn-get(){
 
-    local ids learn num
+    local ids learn search
     printf "" > "$ZPWR_TEMPFILE"
     if [[ -z "$1" ]]; then
         getLastItem
         echo "$ZPWR_VARS[item]" >> "$ZPWR_TEMPFILE"
     else
-        for num in $@; do
+        for search in $@; do
             getItems none
         done >> "$ZPWR_TEMPFILE"
     fi
