@@ -16,6 +16,8 @@ function getItems(){
 
         if [[ $format == none ]]; then
             echo "$ZPWR_VARS[item]"
+        elif [[ $format == sql ]]; then
+            echo "update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = '$ZPWR_VARS[item]' where id=$ZPWR_VARS[id]"
         else
             echo "echo 'update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = ""''"$ZPWR_VARS[item]"''"" where id=$ZPWR_VARS[id]' | ${ZPWR_LEARN_COMMAND}"
         fi
