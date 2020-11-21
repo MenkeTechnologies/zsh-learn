@@ -44,6 +44,10 @@ alias se='noglob searchl'
 
 if (( ${+ZPWR_VERBS} )); then
     ZPWR_VERBS[learn]='savel=save learning to \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME'
+    ZPWR_VERBS[learndel]='del=delete learning from \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME'
+    ZPWR_VERBS[del]='del=delete learning from \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME'
+    ZPWR_VERBS[delete]='del=delete learning from \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME'
+    ZPWR_VERBS[learndelete]='del=delete save learning from \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME'
     ZPWR_VERBS[createlearningcollection]='createLearningCollection=create \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME with mysql -u root'
     ZPWR_VERBS[learnsearch]='se=search for learning in \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME'
 
