@@ -7,6 +7,8 @@
 ##### Purpose: zsh script to learn
 ##### Notes:
 #}}}***********************************************************
+#
+setopt rcquotes
 
 if ! (( $+ZPWR_VARS )); then
     # global contaner to hold globals
