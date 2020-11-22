@@ -7,6 +7,6 @@ function getLastItem(){
         continue
     fi
     ZPWR_VARS[item]=$(echo "select learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME where id=$ZPWR_VARS[id]" | ${=ZPWR_LEARN_COMMAND} 2>> $ZPWR_LOGFILE | tail -n 1)
-    ZPWR_VARS[item]=${ZPWR_VARS[item]//\'/\\\'}
+    ZPWR_VARS[item]=${ZPWR_VARS[item]//\'/\\\'\'}
 }
 getLastItem "$@"
