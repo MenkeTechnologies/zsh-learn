@@ -10,13 +10,14 @@ function savel(){
     local category learning
 
     category="programming"
-    learning="$(printf -- '%s' "$1" | sed 's@^[[:space:]]*@@;s@[[:space:]]*$@@')"
+    # trim/squeeze spaces and escape single quotes
+    learning="$(printf -- '%s' "$1" | sed $'s@^[[:space:]]*@@;s@[[:space:]]*$@@;s@\'@\\\\\'@g')"
 
     if [[ -n "$2" ]]; then
         category="$2"
     fi
 
-    echo "insert into $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME (category, learning, dateAdded) values ('"$category"', '""$learning""', now())" | ${=ZPWR_LEARN_COMMAND} 2>> "$ZPWR_LOGFILE"
+    echo "insert into $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME (category, learning, dateAdded) values ('$category', '$learning', now())" | ${=ZPWR_LEARN_COMMAND} 2>> "$ZPWR_LOGFILE"
 }
 
 savel "$@"

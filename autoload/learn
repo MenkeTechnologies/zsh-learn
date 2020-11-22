@@ -23,7 +23,7 @@ function learn(){
 
         learning="$(print -- "$BUFFER" | perl -pe 's@[\x09\x0a]@\x20@' | perl -pe 's@^\x20+|\x20+$@@g;s@\x20+@\x20@g')"
 
-        BUFFER="le '${learning//'/\''}'"
+        BUFFER="le $'${learning//'/\\'}'"
 
         if [[ $ZPWR_SEND_KEYS_FULL == false ]]; then
             type -- "keyClear" &>/dev/null && keyClear
