@@ -15,6 +15,13 @@ if ! (( $+ZPWR_VARS )); then
     declare -A ZPWR_VARS
 fi
 
+if ! (( $+function[commandExists] )); then
+commandExists () {
+    type -ap -- "$1" > /dev/null 2>&1
+}
+fi
+
+
 ZPWR_VARS[maxRecords]=2000
 
 test -z "$ZPWR_SEND_KEYS_FULL" && export ZPWR_SEND_KEYS_FULL=false
