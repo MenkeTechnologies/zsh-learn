@@ -2,16 +2,17 @@
 # vim: set ft=sh:
 function searchlee(){
 
-    if commandExists ag; then
+     if test -z "$1"; then
+        echo "select id, dateAdded,learning,category from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | ${=ZPWR_LEARN_COMMAND} 2>> $ZPWR_LOGFILE | cat -n
+    else
+        local arg="$1"
+     if commandExists ag; then
         searchCmd="command ag -i --color -- $arg"
     else
         searchCmd="command grep -i --color -- $arg"
     fi
 
-    if test -z "$1"; then
-        echo "select id, dateAdded,learning,category from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | ${=ZPWR_LEARN_COMMAND} 2>> $ZPWR_LOGFILE | cat -n
-    else
-        echo "select id, dateAdded, learning,category from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | ${=ZPWR_LEARN_COMMAND} 2>> $ZPWR_LOGFILE | cat -n | perl -lanE 'print "$F[0])\t@F[1..$#F]" if (grep /'"$1"'/i, "@F[1..$#F]")' | ${=searchCmd}
+      echo "select id, dateAdded, learning,category from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | ${=ZPWR_LEARN_COMMAND} 2>> $ZPWR_LOGFILE | cat -n | perl -lanE 'print "$F[0])\t@F[1..$#F]" if (grep /'"$arg"'/i, "@F[1..$#F]")' | ${=searchCmd}
     fi
 }
 
