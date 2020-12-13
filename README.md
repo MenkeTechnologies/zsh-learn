@@ -13,6 +13,7 @@ zinit ice lucid nocompile
 zinit load MenkeTechnologies/zsh-learn
 ```
 
+### Environment variables
 You change the database command to run by exporting this environment variable with a custom database command.  The default command is mysql.
 ```sh
 export ZPWR_LEARN_COMMAND=mysql
@@ -20,6 +21,11 @@ export ZPWR_LEARN_COMMAND=mysql
 For example with MariaDB unix auth plugin you would change to:
 ```sh
 export ZPWR_LEARN_COMMAND='sudo mysql'
+```
+Change the schema.table default values with these environment variables. Before `createLearningCollection` if schema.table do not exist.
+```sh
+export ZPWR_SCHEMA_NAME="root"
+export ZPWR_TABLE_NAME="LearningCollectiion"
 ```
 
 ## Functions
