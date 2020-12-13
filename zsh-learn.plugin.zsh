@@ -15,7 +15,7 @@ if ! (( $+ZPWR_VARS )); then
     declare -A ZPWR_VARS
 fi
 
-if ! (( $+function[commandExists] )); then
+if ! (( $+functions[commandExists] )); then
 commandExists () {
     type -ap -- "$1" > /dev/null 2>&1
 }
