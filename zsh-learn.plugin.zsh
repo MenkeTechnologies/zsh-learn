@@ -15,9 +15,21 @@ if ! (( $+ZPWR_VARS )); then
     declare -A ZPWR_VARS
 fi
 
+if ! (( $+functions[zpwrLoggErr] )); then
+zpwrLoggErr () {
+    echo "$@" >&2
+}
+fi
+
 if ! (( $+functions[zpwrCommandExists] )); then
 zpwrCommandExists () {
     type -ap -- "$1" > /dev/null 2>&1
+}
+fi
+
+if ! (( $+functions[zpwrAlternatingPrettyPrint] )); then
+zpwrAlternatingPrettyPrint() {
+    echo "$@" >&1
 }
 fi
 
