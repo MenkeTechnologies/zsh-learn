@@ -27,6 +27,14 @@ function zsh-learn-DropLearningCollection(){
 
     zpwrAlternatingPrettyPrint "Dropping$ZPWR_DELIMITER_CHAR $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME$ZPWR_DELIMITER_CHAR with$ZPWR_DELIMITER_CHAR $ZPWR_LEARN_COMMAND$ZPWR_DELIMITER_CHAR"
 
+    printf "Are you sure? y/n > "
+    read
+    if [[ $REPLY == y ]]; then
+        :
+    else
+        return 1
+    fi
+
     if [[ -n "$1" ]]; then
         #use first arg as mysql password
         if echo "select * from information_schema.tables" | ${=ZPWR_LEARN_COMMAND} -p "$1" | command grep --color=always -q "$ZPWR_TABLE_NAME";then
