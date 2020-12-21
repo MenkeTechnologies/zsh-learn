@@ -18,7 +18,7 @@ function zsh-learn-Searchle(){
 
         arg="$1"
 
-        if commandExists ag; then
+        if zpwrCommandExists ag; then
              searchCmd="command ag -i --color -- $arg"
         else
              searchCmd="command grep -i --color -- $arg"
