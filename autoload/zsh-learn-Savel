@@ -1,9 +1,9 @@
 # -*- mode: sh -*-
 # vim: set ft=sh:
-function savel(){
+function zsh-learn-Savel(){
 
     if [[ -z "$1" ]]; then
-        echo "usage: savel <learning> [<category>]" >&2
+        echo "usage: zsh-learn-Savel <learning> [<category>]" >&2
         return 1
     fi
 
@@ -19,4 +19,4 @@ function savel(){
     echo "insert into $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME (category, learning, dateAdded) values ('"$category"', '""$learning""', now())" | ${=ZPWR_LEARN_COMMAND} 2>> "$ZPWR_LOGFILE"
 }
 
-savel "$@"
+zsh-learn-Savel "$@"

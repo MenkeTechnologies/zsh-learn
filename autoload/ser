@@ -7,7 +7,7 @@ function ser(){
         num=$1
     fi
 
-    searchl | shuf -n $num
+    zsh-learn-Searchl | shuf -n $num
 }
 
 ser "$@"

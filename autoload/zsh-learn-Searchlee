@@ -1,6 +1,6 @@
 # -*- mode: sh -*-
 # vim: set ft=sh:
-function searchlee(){
+function zsh-learn-Searchlee(){
 
      if test -z "$1"; then
         echo "select id, dateAdded,learning,category from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" | ${=ZPWR_LEARN_COMMAND} 2>> $ZPWR_LOGFILE | cat -n
@@ -16,4 +16,4 @@ function searchlee(){
     fi
 }
 
-searchlee "$@"
+zsh-learn-Searchlee "$@"

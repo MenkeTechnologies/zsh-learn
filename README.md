@@ -22,7 +22,7 @@ For example with MariaDB unix auth plugin you would change to:
 ```sh
 export ZPWR_LEARN_COMMAND='sudo mysql'
 ```
-Change the schema.table default values with these environment variables. Before `createLearningCollection` if schema.table do not exist.
+Change the schema.table default values with these environment variables. Before `zsh-learn-CreateLearningCollection` if schema.table do not exist.
 ```sh
 export ZPWR_SCHEMA_NAME="root"
 export ZPWR_TABLE_NAME="LearningCollectiion"
@@ -90,15 +90,15 @@ One or more args are the number order records to print to prompt
 Selects learning column from last records from the learning table and print to vim with SQ update statements.
 One or more args are the number order records to print to prompt
 
-- createLearningCollection
+- zsh-learn-CreateLearningCollection
 
 Creates the learning table, generates DDL
 
 
 ## ZLE Keybindings
 ```sh
-bindkey -M viins '^k' learn
-bindkey -M vicmd '^k' learn
+bindkey -M viins '^k' zsh-learn-Learn
+bindkey -M vicmd '^k' zsh-learn-Learn
 ```
 
 Control-k is bound to the learn function in vim insert and normal modes

@@ -1,18 +1,18 @@
 # -*- mode: sh -*-
 # vim: set ft=sh:
-function redosql(){
+function zsh-learn-Redosql(){
 
     local id item ids learn search
 
     printf ""> "$ZPWR_TEMPFILE_SQL"
 
     if [[ -z "$1" ]]; then
-        getLastItem
+        zsh-learn-GetLastItem
 
         echo "update $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME set learning = '$ZPWR_VARS[item]' where id=$ZPWR_VARS[id]" >> "$ZPWR_TEMPFILE_SQL"
     else
         for search in $@; do
-            getItems sql
+            zsh-learn-GetItems sql
         done >> "$ZPWR_TEMPFILE_SQL"
     fi
 
@@ -26,4 +26,4 @@ function redosql(){
         command rm "$ZPWR_TEMPFILE_SQL"
     fi
 }
-redosql "$@"
+zsh-learn-Redosql "$@"

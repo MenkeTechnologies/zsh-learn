@@ -4,7 +4,7 @@
 function _fzf_complete_rsql() {
 
   FZF_COMPLETION_OPTS= _fzf_complete '-m --ansi' "$@" < <(
-        searchl | tac
+        zsh-learn-Searchl | tac
     )
 }
 

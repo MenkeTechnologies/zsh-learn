@@ -1,6 +1,6 @@
 # -*- mode: sh -*-
 # vim: set ft=sh:
-function getItems(){
+function zsh-learn-GetItems(){
 
     local ids item id learn
     local format="$1"
@@ -39,4 +39,4 @@ function getItems(){
     fi
 }
 
-getItems "$@"
+zsh-learn-GetItems "$@"

@@ -2,7 +2,7 @@
 # vim: set ft=sh:
 function sera(){
 
-    searchl | shuf
+    zsh-learn-Searchl | shuf
 }
 
 sera "$@"

@@ -1,6 +1,6 @@
 # -*- mode: sh -*-
 # vim: set ft=sh:
-function learn(){
+function zsh-learn-Learn(){
 
     local mywords learning
 
@@ -31,10 +31,10 @@ function learn(){
         fi
     else
         printf "\x1b[0;1;31m"
-        zle -R "Zsh-Learn ERROR: Cannot learn empty BUFFER." && read -k 1
+        zle -R "Zsh-Learn ERROR: Cannot zsh-learn-Learn empty BUFFER." && read -k 1
         printf "\x1b[0m"
         return 1
     fi
 }
 
-learn "$@"
+zsh-learn-Learn "$@"

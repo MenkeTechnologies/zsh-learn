@@ -1,15 +1,15 @@
 # -*- mode: sh -*-
 # vim: set ft=sh:
-function zsh-learn-get(){
+function zsh-learn-Get(){
 
     local ids learn search
     printf "" > "$ZPWR_TEMPFILE"
     if [[ -z "$1" ]]; then
-        getLastItem
+        zsh-learn-GetLastItem
         echo "$ZPWR_VARS[item]" >> "$ZPWR_TEMPFILE"
     else
         for search in $@; do
-            getItems none
+            zsh-learn-GetItems none
         done >> "$ZPWR_TEMPFILE"
     fi
 
@@ -17,4 +17,4 @@ function zsh-learn-get(){
     command rm "$ZPWR_TEMPFILE"
 }
 
-zsh-learn-get "$@"
+zsh-learn-Get "$@"

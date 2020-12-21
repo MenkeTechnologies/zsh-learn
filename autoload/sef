@@ -2,10 +2,10 @@
 # vim: set ft=sh:
 function sef(){
 
-    searchl |
+    zsh-learn-Searchl |
         tac |
         fzf --ansi -m |
-        perl -ane 'BEGIN{$c=0} print "redo " if ++$c == 1;print $F[0]." "' |
+        perl -ane 'BEGIN{$c=0} print "zsh-learn-Redo " if ++$c == 1;print $F[0]." "' |
         source /dev/stdin
 }
 

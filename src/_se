@@ -1,4 +1,4 @@
-#compdef  se see seee redo rsql re searchl searchle searchlee redosql
+#compdef  se see seee zsh-learn-Redo rsql re zsh-learn-Searchl zsh-learn-Searchle zsh-learn-Searchlee zsh-learn-Redosql
 
 function _se(){
 
@@ -8,11 +8,11 @@ function _se(){
 
     eval "learn_ary=( $( print -r -- "${items[@]}" | perl -e '@a=();$c=0;do{chomp;push(@ary,++$c.":".quotemeta($_))}for<>;$c=0;do{print "$_ " if $c++ < '$ZPWR_VARS[maxRecords]'}for reverse @ary') )"
 
-    _describe -t zsh-learn-id 'learning id' learn_ary
+    _describe -t zsh-learn-Zsh-learn-id 'learning id' learn_ary
 
     eval "learn_ary=( $(print -r -- "${items[@]}" | perl -e '@a=();$c=0;do{chomp;push(@ary,quotemeta($_).":".++$c)}for<>;$c=0;do{print "$_ " if $c++ < '$ZPWR_VARS[maxRecords]'}for reverse @ary') )"
 
-    _describe -t zsh-learn-text 'learning text' learn_ary
+    _describe -t zsh-learn-Zsh-learn-text 'learning text' learn_ary
 }
 
 _se "$@"
