@@ -71,6 +71,7 @@ if (( ${+ZPWR_VERBS} )); then
     ZPWR_VERBS[delete]='del=delete learning from \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME'
     ZPWR_VERBS[learndelete]='del=delete save learning from \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME'
     ZPWR_VERBS[createlearningcollection]='zsh-learn-CreateLearningCollection=create \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME with mysql -u root'
+    ZPWR_VERBS[droplearningcollection]='zsh-learn-DropLearningCollection=drop \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME with mysql -u root'
     ZPWR_VERBS[learnsearch]='se=search for learning in \$ZPWR_SCHEMA_NAME.\$ZPWR_TABLE_NAME'
 
     ZPWR_VERBS[se]='zsh-learn-Searchl=search the learning collection'
