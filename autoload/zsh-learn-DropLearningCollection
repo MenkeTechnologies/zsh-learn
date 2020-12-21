@@ -1,0 +1,53 @@
+# -*- mode: sh -*-
+# vim: set ft=sh:
+function zsh-learn-DropLearningCollection(){
+
+
+    function usage() {
+        echo "Usage :  $0 [options] [--]
+        Options:
+        -h|help       Display this message"
+    }
+
+    while getopts ":hs" opt; do
+        case $opt in
+
+        h|help)
+            usage
+            return 0
+            ;;
+        *)
+            printf "\n  Option does not exist : $OPTARG\n"
+            usage
+            return 1
+            ;;
+        esac
+    done
+    shift $(($OPTIND-1))
+
+    zpwrAlternatingPrettyPrint "Dropping$ZPWR_DELIMITER_CHAR $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME$ZPWR_DELIMITER_CHAR with$ZPWR_DELIMITER_CHAR $ZPWR_LEARN_COMMAND$ZPWR_DELIMITER_CHAR"
+
+    if [[ -n "$1" ]]; then
+        #use first arg as mysql password
+        if echo "select * from information_schema.tables" | ${=ZPWR_LEARN_COMMAND} -p "$1" | command grep --color=always -q "$ZPWR_TABLE_NAME";then
+
+            echo 'DROP TABLE `'"$ZPWR_TABLE_NAME"'`'
+            echo 'DROP TABLE `'"$ZPWR_TABLE_NAME"'`' | ${=ZPWR_LEARN_COMMAND} -D "$ZPWR_SCHEMA_NAME" -p "$1"
+        else
+            zpwrLoggErr "$ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME does not exist"
+        fi
+    else
+        #use my.cnf
+        if echo "select * from information_schema.tables" | ${=ZPWR_LEARN_COMMAND} | command grep --color=always -q "$ZPWR_TABLE_NAME";then
+
+            echo 'DROP TABLE `'"$ZPWR_TABLE_NAME"'`'
+            echo 'DROP TABLE `'"$ZPWR_TABLE_NAME"'`' | ${=ZPWR_LEARN_COMMAND} -D "$ZPWR_SCHEMA_NAME"
+        else
+            zpwrLoggErr "$ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME already exists"
+        fi
+    fi
+
+    unset usage
+}
+
+zsh-learn-DropLearningCollection "$@"
