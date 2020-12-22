@@ -93,6 +93,7 @@ if (( ${+ZPWR_VERBS} )); then
     ZPWR_VERBS[ser]='ser=random search the learning collection'
 
     ZPWR_VERBS[quiz]='qu=quiz from the learning collection'
+    ZPWR_VERBS[quizall]='qua=quiz all from the learning collection'
 
     ZPWR_VERBS[sef]='sef=search into fzf the learning collection'
 fi
