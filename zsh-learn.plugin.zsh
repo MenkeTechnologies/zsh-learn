@@ -83,7 +83,8 @@ if (( ${+ZPWR_VERBS} )); then
     ZPWR_VERBS[seee]='zsh-learn-Searchlee=timestamp search the learning collection'
     ZPWR_VERBS[searchlee]='zsh-learn-Searchlee=timestamp search the learning collection'
 
-    ZPWR_VERBS[get]='zsh-learn-Get=get learning items'
+    ZPWR_VERBS[learnget]='zsh-learn-Get=get learning items'
+    ZPWR_VERBS[getlearn]='zsh-learn-Get=get learning items'
     ZPWR_VERBS[re]='zsh-learn-Redo=zsh-learn-Redo the learning collection'
     ZPWR_VERBS[redo]='zsh-learn-Redo=zsh-learn-Redo the learning collection'
 
