@@ -94,9 +94,13 @@ if (( ${+ZPWR_VERBS} )); then
     ZPWR_VERBS[ser]='ser=random search the learning collection'
 
     ZPWR_VERBS[quiz]='qu=quiz from the learning collection'
+    ZPWR_VERBS[qu]='qu=quiz from the learning collection'
     ZPWR_VERBS[quizall]='qua=quiz all from the learning collection'
+    ZPWR_VERBS[qua]='qua=quiz all from the learning collection'
 
-    ZPWR_VERBS[sef]='sef=search into fzf the learning collection'
+    ZPWR_VERBS[sef]='sef=search into fzf the entire learning collection'
+    ZPWR_VERBS[searchfull]='sef=search into fzf the entire learning collection'
+    ZPWR_VERBS[searchall]='sef=search into fzf the entire learning collection'
 fi
 
 # to allow reverse numeric sort and numeric sort
