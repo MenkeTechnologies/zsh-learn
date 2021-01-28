@@ -118,6 +118,7 @@ if [[ $ZPWR_LEARN != false ]]; then
     zle -N zsh-learn-Learn
     bindkey -M viins '^k' zsh-learn-Learn
     bindkey -M vicmd '^k' zsh-learn-Learn
+    bindkey -M emacs '^k' zsh-learn-Learn
 
     0="${${0:#$ZSH_ARGZERO}:-${(%):-%N}}"
     0="${${(M)0:#/*}:-$PWD/$0}"
