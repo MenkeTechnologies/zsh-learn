@@ -10,9 +10,9 @@
 #
 setopt rcquotes
 
-if ! (( $+ZPWR_VARS )); then
-    # global contaner to hold globals
-    declare -A ZPWR_VARS
+if ! (( $+ZPWR_VARS )) || [[ ${parameters[ZPWR_VARS]} != association ]]; then
+    # global map to containerize global variables
+    declare -gA ZPWR_VARS
 fi
 
 if ! (( $+functions[zpwrLoggErr] )); then
