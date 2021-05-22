@@ -30,21 +30,30 @@ function zsh-learn-CreateLearningCollection(){
         #use first arg as mysql password
         if ! echo "select * from information_schema.tables" | ${=ZPWR_LEARN_COMMAND} -p "$1" | command grep --color=always -q "$ZPWR_TABLE_NAME";then
             echo  "create schema $ZPWR_SCHEMA_NAME if not exists"
-            echo  "create schema $ZPWR_SCHEMA_NAME if not exists" | ${=ZPWR_LEARN_COMMAND} -p "$1"
+            echo  "create schema $ZPWR_SCHEMA_NAME if not exists" |
+                ${=ZPWR_LEARN_COMMAND} -p "$1"
 
-            echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar('$ZPWR_LEARN_MAX_SIZE') DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`), KEY `'"$ZPWR_TABLE_NAME"'learning_index` (`learning`))'
-            echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar('$ZPWR_LEARN_MAX_SIZE') DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`), KEY `'"$ZPWR_TABLE_NAME"'learning_index` (`learning`))' | ${=ZPWR_LEARN_COMMAND} -D "$ZPWR_SCHEMA_NAME" -p "$1"
+            echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar('$ZPWR_LEARN_MAX_SIZE') DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`))'
+
+            echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar('$ZPWR_LEARN_MAX_SIZE') DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`))' |
+                ${=ZPWR_LEARN_COMMAND} -D "$ZPWR_SCHEMA_NAME" -p "$1"
         else
             zpwrLoggErr "$ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME already exists"
         fi
     else
         #use my.cnf
-        if ! echo "select * from information_schema.tables" | ${=ZPWR_LEARN_COMMAND} | command grep --color=always -q "$ZPWR_TABLE_NAME";then
-            echo  "create schema if not exists $ZPWR_SCHEMA_NAME"
-            echo  "create schema if not exists $ZPWR_SCHEMA_NAME" | ${=ZPWR_LEARN_COMMAND}
+        if ! echo "select * from information_schema.tables" |
+            ${=ZPWR_LEARN_COMMAND} |
+            command grep --color=always -q "$ZPWR_TABLE_NAME";then
 
-            echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar('$ZPWR_LEARN_MAX_SIZE') DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`), KEY `'"$ZPWR_TABLE_NAME"'learning_index` (`learning`))'
-            echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar('$ZPWR_LEARN_MAX_SIZE') DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`), KEY `'"$ZPWR_TABLE_NAME"'learning_index` (`learning`))' | ${=ZPWR_LEARN_COMMAND} -D "$ZPWR_SCHEMA_NAME"
+            echo  "create schema if not exists $ZPWR_SCHEMA_NAME"
+            echo  "create schema if not exists $ZPWR_SCHEMA_NAME" |
+                ${=ZPWR_LEARN_COMMAND}
+
+            echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar('$ZPWR_LEARN_MAX_SIZE') DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`))'
+
+            echo 'CREATE TABLE `'"$ZPWR_TABLE_NAME"'` ( `category` varchar(20) DEFAULT NULL, `learning` varchar('$ZPWR_LEARN_MAX_SIZE') DEFAULT NULL,`dateAdded` datetime DEFAULT NULL, `id` int(11) NOT NULL AUTO_INCREMENT,  PRIMARY KEY (`id`))' |
+                ${=ZPWR_LEARN_COMMAND} -D "$ZPWR_SCHEMA_NAME"
         else
             zpwrLoggErr "$ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME already exists"
         fi
