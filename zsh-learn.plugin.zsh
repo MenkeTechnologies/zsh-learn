@@ -46,7 +46,7 @@ test -z "$ZPWR_TEMPFILE2" && export ZPWR_TEMPFILE2="/tmp/.zpwr-temp2"
 test -z "$ZPWR_LOGFILE" && export ZPWR_LOGFILE="/tmp/.zpwr-log"
 test -z "$ZPWR_CHAR_LOGO" && export ZPWR_CHAR_LOGO="<<)(>>"
 test -z "$ZPWR_LEARN_COMMAND" && export ZPWR_LEARN_COMMAND='mysql'
-test -z "$ZPWR_LEARN_MAX_SIZE" && export ZPWR_LEARN_MAX_SIZE=1000
+test -z "$ZPWR_LEARN_MAX_SIZE" && export ZPWR_LEARN_MAX_SIZE=3000
 
 # stop common typos
 alias le='noglob zsh-learn-Savel'
