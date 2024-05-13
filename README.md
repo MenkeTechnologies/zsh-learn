@@ -25,7 +25,7 @@ export ZPWR_LEARN_COMMAND='sudo mysql'
 Change the schema.table default values with these environment variables. Before `zsh-learn-CreateLearningCollection` if schema.table do not exist.
 ```sh
 export ZPWR_SCHEMA_NAME="root"
-export ZPWR_TABLE_NAME="LearningCollectiion"
+export ZPWR_TABLE_NAME="LearningCollection"
 ```
 
 ## Functions
