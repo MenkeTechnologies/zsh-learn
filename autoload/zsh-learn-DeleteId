@@ -1,0 +1,11 @@
+# -*- mode: sh -*-
+# vim: set ft=sh:
+function zsh-learn-DeleteId(){
+    if [[ -z $1 ]]; then
+        echo "Usage: zsh-learn-DeleteId <id>"
+        return 1
+    fi
+    echo "DELETE FROM $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME WHERE id = "$1";" | ${=ZPWR_LEARN_COMMAND}
+}
+
+zsh-learn-DeleteId "$@"
