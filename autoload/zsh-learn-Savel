@@ -5,7 +5,7 @@ function zsh-learn-Savel(){
         echo "Usage: zsh-learn-Savel [options] <learning>\nOptions:\n -e    Edit learning in default editor\n -c    Set a custom category"
     }
 
-    local category learning
+    local category learning content filename
     category="programming"
 
     while getopts "ec:" opt; do
