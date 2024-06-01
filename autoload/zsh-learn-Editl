@@ -6,12 +6,12 @@ function zsh-learn-Editl(){
         return 1
     fi
 
-    content=$(echo "SELECT learning FROM $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME WHERE id = $1;" | ${=ZPWR_LEARN_COMMAND} --silent)
+    content=$(echo "SELECT learning FROM $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME WHERE id = $1;" | ${=ZPWR_LEARN_COMMAND} | tail +2)
 
-    filename="/tmp/edit-note"
+    filename="${TMPDIR:-/tmp}/edit-learning"
     touch $filename
     echo $content >> $filename
-    $EDITOR $filename
+    ${=EDITOR} $filename
     learning=$(cat $filename)
     rm $filename
 

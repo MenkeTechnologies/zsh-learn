@@ -12,9 +12,9 @@ function zsh-learn-Savel(){
         case $opt in
 
         e)
-            filename="/tmp/edit-learning"
+            filename="${TMPDIR:-/tmp}/edit-learning"
             touch $filename
-            $EDITOR $filename
+            ${=EDITOR} $filename
             learning=$(cat $filename)
             rm $filename
             ;;
