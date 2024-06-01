@@ -6,6 +6,8 @@ function zsh-learn-Editl(){
         return 1
     fi
 
+    local content filename learning
+
     content=$(echo "SELECT learning FROM $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME WHERE id = $1;" | ${=ZPWR_LEARN_COMMAND} | tail +2)
 
     filename="${TMPDIR:-/tmp}/edit-learning"
