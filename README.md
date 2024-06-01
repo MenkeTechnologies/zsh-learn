@@ -36,11 +36,19 @@ Take the first arg as the learning text and inserts into learning table
 
 - se (short for search)
 
+- editl (short for edit)
+
+Find and edit a learning by id. Opens in default text editor.
+
 Selects learning column from all records from the learning table
 
 - del (short for delete)
 
 Deletes last item from table
+
+- delid (short for delete by id)
+
+Deletes a specific id from the learning table
 
 - sef (short for search fzf)
 

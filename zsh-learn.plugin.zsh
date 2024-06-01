@@ -63,14 +63,18 @@ alias rsql='noglob zsh-learn-Redosql'
 alias see='noglob zsh-learn-Searchle'
 alias seee='noglob zsh-learn-Searchlee'
 alias se='noglob zsh-learn-Searchl'
+alias editl='noglob zsh-learn-Editl'
+alias delid='noglob zsh-learn-DeleteId'
 
 if (( ${+ZPWR_VERBS} )); then
 
     ZPWR_VERBS[learn]='zsh-learn-Savel=save learning to $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME'
     ZPWR_VERBS[learndel]='del=delete learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME'
+    ZPWR_VERBS[editl]='zsh-learn-Editl=Edit learning by id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME'
     ZPWR_VERBS[del]='del=delete learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME'
     ZPWR_VERBS[delete]='del=delete learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME'
     ZPWR_VERBS[learndelete]='del=delete save learning from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME'
+    ZPWR_VERBS[delid]='zsh-learn-DeleteId=delete learning by id from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME'
     ZPWR_VERBS[createlearningcollection]='zsh-learn-CreateLearningCollection=create $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME with mysql -u root'
     ZPWR_VERBS[droplearningcollection]='zsh-learn-DropLearningCollection=drop $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME with mysql -u root'
     ZPWR_VERBS[learnsearch]='se=search for learning in $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME'

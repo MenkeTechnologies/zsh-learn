@@ -1,19 +1,42 @@
 # -*- mode: sh -*-
 # vim: set ft=sh:
 function zsh-learn-Savel(){
-
-    if [[ -z "$1" ]]; then
-        echo "usage: zsh-learn-Savel <learning> [<category>]" >&2
-        return 1
-    fi
+    function usage() {
+        echo "Usage: zsh-learn-Savel [options] <learning>\nOptions:\n -e    Edit learning in default editor\n -c    Set a custom category"
+    }
 
     local category learning
-
     category="programming"
-    learning="$(printf -- '%s' "$1" | sed 's@^[[:space:]]*@@;s@[[:space:]]*$@@')"
 
-    if [[ -n "$2" ]]; then
-        category="$2"
+    while getopts "ec:" opt; do
+        case $opt in
+
+        e)
+            filename="${TMPDIR:-/tmp}/edit-learning"
+            touch $filename
+            ${=EDITOR} $filename
+            learning=$(cat $filename)
+            rm $filename
+            ;;
+        c)
+            category=$OPTARG
+            ;;
+        *)
+            printf "\n  Option does not exist : $OPTARG\n"
+            usage
+            return 1
+            ;;
+        esac
+    done
+    shift $(($OPTIND-1))
+
+    if [[ -z $learning ]]; then
+        learning="$(printf -- '%s' "$1" | sed 's@^[[:space:]]*@@;s@[[:space:]]*$@@')"
+    fi
+
+    if [[ -z $learning ]]; then
+        usage
+        return 1
     fi
 
     echo "insert into $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME (category, learning, dateAdded) values ('"$category"', '""$learning""', now())" | ${=ZPWR_LEARN_COMMAND} 2>> "$ZPWR_LOGFILE"
