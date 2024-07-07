@@ -22,6 +22,11 @@ function zsh-learn-Editl(){
         return 1
     fi
 
+    if (( ${#learning} > $ZPWR_LEARN_MAX_SIZE )); then
+        echo "Learning is greater than limit of $ZPWR_LEARN_MAX_SIZE"
+        return 1
+    fi
+
     echo "UPDATE $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME SET learning='"$learning"' WHERE id = $1;" | ${=ZPWR_LEARN_COMMAND}
 }
 
