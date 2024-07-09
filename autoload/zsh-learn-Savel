@@ -39,6 +39,11 @@ function zsh-learn-Savel(){
         return 1
     fi
 
+    if (( ${#learning} > $ZPWR_LEARN_MAX_SIZE )); then
+        echo "Learning is greater than limit of $ZPWR_LEARN_MAX_SIZE"
+        return 1
+    fi
+
     echo "insert into $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME (category, learning, dateAdded) values ('"$category"', '""$learning""', now())" | ${=ZPWR_LEARN_COMMAND} 2>> "$ZPWR_LOGFILE"
 }
 
