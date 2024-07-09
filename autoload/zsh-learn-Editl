@@ -22,8 +22,8 @@ function zsh-learn-Editl(){
         return 1
     fi
 
-    if (( ${#learning} > $ZPWR_LEARN_MAX_SIZE )); then
-        echo "Learning is greater than limit of $ZPWR_LEARN_MAX_SIZE"
+    if (( $#learning > ZPWR_LEARN_MAX_SIZE )); then
+        echo "Learning of size $#learning is greater than limit of $ZPWR_LEARN_MAX_SIZE"
         return 1
     fi
 
