@@ -30,77 +30,67 @@ export ZPWR_TABLE_NAME="LearningCollection"
 
 ## Functions
 
-- le (short for learn)
+Take LEARNING as the learning text and inserts into learning table
 
-Take the first arg as the learning text and inserts into learning table
+- le LEARNING (short for learn)
 
-- se (short for search)
+Selects learning column from all records from the learning table with optional FILTERs
 
-- editl (short for edit)
+- se [FILTER...] (short for search)
 
-Find and edit a learning by id. Opens in default text editor.
+Find and edit a learning by ID. Opens in default text editor.
 
-Selects learning column from all records from the learning table
+- editl ID (short for edit learning)
 
-- del (short for delete)
+Deletes N last items from table, default N = 1
 
-Deletes last item from table
+- del [N] (short for delete)
 
-- delid (short for delete by id)
+Deletes a specific ID from the learning table
 
-Deletes a specific id from the learning table
-
-- sef (short for search fzf)
+- delid ID (short for delete by id)
 
 Selects all from the learning table into fzf with most recent first
 
-- see(short for search extra)
+- sef (short for search fzf)
 
+Selects learning and category columns from all records from the learning table with optional FILTER
 
-Selects learning and category columns from all records from the learning table
-
-- seee(short for search extra extra)
-
+- see [FILTER](short for search extra)
 
 Selects learning, category and date columns from all records from the learning table
 
-- ser(short for search random)
+- seee(short for search extra extra)
 
+Selects learning column from N random records from the learning table, default N = 100
 
-Selects learning column from 100 random records from the learning table
-First arg is number of random records
-
-- sera(short for search random all)
-
+- ser N (short for search random)
 
 Selects learning column from all random records from the learning table
 
-- qu(short for quiz)
+- sera(short for search random all)
 
+Selects learning column from N random records from the learning table into fzf, default N = 100
 
-Selects learning column from 100 random records from the learning table into fzf
-First arg is number of random records
-
-- qua(short for quiz all)
-
+- qu N (short for quiz)
 
 Selects learning column from alll random records from the learning table into fzf
 
-
-- redo
+- qua(short for quiz all)
 
 Selects learning column from last records from the learning table and print to prompt with SQL update statements.
 One or more args are the number order records to print to prompt
 
-- rsql (short for redo sql)
-
+- redo
 
 Selects learning column from last records from the learning table and print to vim with SQ update statements.
 One or more args are the number order records to print to prompt
 
-- zsh-learn-CreateLearningCollection
+- rsql (short for redo sql)
 
 Creates the learning table, generates DDL
+
+- zsh-learn-CreateLearningCollection
 
 
 ## ZLE Keybindings
