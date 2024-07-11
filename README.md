@@ -79,14 +79,14 @@ Selects learning column from alll random records from the learning table into fz
 - qua(short for quiz all)
 
 Selects learning column from last records from the learning table and print to prompt with SQL update statements.
-One or more args are the number order records to print to prompt
+Arguments are either integer ID or string FILTER to select 1 or more records that match.
 
-- redo
+- re [ID|FILTER]
 
-Selects learning column from last records from the learning table and print to vim with SQ update statements.
-One or more args are the number order records to print to prompt
+Selects learning column from last record from the learning table and print to vim with SQL update statements.
+Arguments are either integer ID or string FILTER to select 1 or more records that match.
 
-- rsql (short for redo sql)
+- rsql [ID|FILTER] (short for redo sql)
 
 Creates the learning table, generates DDL
 
