@@ -31,13 +31,15 @@ function zsh-learn-Savel(){
     shift $(($OPTIND-1))
 
     if [[ -z $learning ]]; then
-        learning="$(printf -- '%s' "$1" | sed 's@^[[:space:]]*@@;s@[[:space:]]*$@@')"
+        learning="$(printf -- '%s' "$1")"
     fi
 
     if [[ -z $learning ]]; then
         usage
         return 1
     fi
+
+    learning="$(echo $learning | sed 's@^[[:space:]]*@@;s@[[:space:]]*$@@;s/'\''/\\'\''/g')"
 
     if (( $#learning > ZPWR_LEARN_MAX_SIZE )); then
         echo "Learning of size $#learning is greater than limit of $ZPWR_LEARN_MAX_SIZE"

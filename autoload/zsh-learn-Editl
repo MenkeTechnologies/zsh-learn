@@ -27,6 +27,8 @@ function zsh-learn-Editl(){
         return 1
     fi
 
+    learning="$(echo $learning | sed 's@^[[:space:]]*@@;s@[[:space:]]*$@@;s/'\''/\\'\''/g')"
+
     echo "UPDATE $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME SET learning='"$learning"' WHERE id = $1;" | ${=ZPWR_LEARN_COMMAND}
 }
 
