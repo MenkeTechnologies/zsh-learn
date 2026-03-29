@@ -41,6 +41,11 @@ function zsh-learn-Savel(){
 
     learning="$(echo $learning | sed 's@^[[:space:]]*@@;s@[[:space:]]*$@@;s/'\''/\\'\''/g')"
 
+    if [[ -z $learning ]]; then
+        usage
+        return 1
+    fi
+
     if (( $#learning > ZPWR_LEARN_MAX_SIZE )); then
         echo "Learning of size $#learning is greater than limit of $ZPWR_LEARN_MAX_SIZE"
         return 1
