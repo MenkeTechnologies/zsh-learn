@@ -10,7 +10,7 @@ function zsh-learn-Searchle(){
             echo "select learning,category from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" |
             ${=ZPWR_LEARN_COMMAND} 2>> $ZPWR_LOGFILE | nl -b a -n rn | perl -pe 's@(\s*)(\d+)\s+(.*)@$1\x1b[35m$2\x1b[0m \x1b[32m$3\x1b[0m@g'
         else
-            echo "select learning,category from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME" |
+            echo "select learning,category from $ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME order by dateAdded" |
             ${=ZPWR_LEARN_COMMAND} 2>> $ZPWR_LOGFILE | nl -b a -n rn
         fi
 
