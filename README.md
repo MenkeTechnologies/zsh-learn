@@ -9,6 +9,7 @@
 ╚══════╝╚══════╝╚═╝  ╚═╝       ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝
 ```
 
+[![CI](https://github.com/MenkeTechnologies/zsh-learn/actions/workflows/ci.yml/badge.svg)](https://github.com/MenkeTechnologies/zsh-learn/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-ff00ff.svg?style=flat-square)](LICENSE)
 [![Shell](https://img.shields.io/badge/shell-zsh-00ffff.svg?style=flat-square)](https://www.zsh.org/)
 [![DB](https://img.shields.io/badge/db-MySQL%20%7C%20MariaDB-ff6600.svg?style=flat-square)](https://www.mysql.com/)
