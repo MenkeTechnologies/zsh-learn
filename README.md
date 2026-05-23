@@ -1,5 +1,3 @@
-<div align="center">
-
 ```
 ███████╗███████╗██╗  ██╗       ██╗     ███████╗ █████╗ ██████╗ ███╗   ██╗
 ╚══███╔╝██╔════╝██║  ██║       ██║     ██╔════╝██╔══██╗██╔══██╗████╗  ██║
@@ -10,20 +8,30 @@
 ```
 
 [![CI](https://github.com/MenkeTechnologies/zsh-learn/actions/workflows/ci.yml/badge.svg)](https://github.com/MenkeTechnologies/zsh-learn/actions/workflows/ci.yml)
-[![License](https://img.shields.io/badge/license-MIT-ff00ff.svg?style=flat-square)](LICENSE)
-[![Shell](https://img.shields.io/badge/shell-zsh-00ffff.svg?style=flat-square)](https://www.zsh.org/)
-[![DB](https://img.shields.io/badge/db-MySQL%20%7C%20MariaDB-ff6600.svg?style=flat-square)](https://www.mysql.com/)
-[![Plugin](https://img.shields.io/badge/plugin-zinit-7fff00.svg?style=flat-square)](https://github.com/zdharma-continuum/zinit)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![zsh](https://img.shields.io/badge/zsh-plugin-cyan.svg)](https://github.com/MenkeTechnologies/zpwr)
 
-> **`[ NEURAL KNOWLEDGE INTERFACE // ZSH MODULE ]`**
+### `[MYSQL-BACKED LEARNING COLLECTION FOR ZSH // SAVE, QUERY, QUIZ]`
 
-*A terminal-native learning engine backed by MySQL/MariaDB. Save, query, and quiz yourself on everything you learn — code snippets, technical notes, command references — directly from your shell.*
+> *"Every command you forgot, recoverable."*
+
+### [`strykelang`](https://github.com/MenkeTechnologies/strykelang) &middot; [`zshrs`](https://github.com/MenkeTechnologies/zshrs) · [`MenkeTechnologiesMeta`](https://github.com/MenkeTechnologies/MenkeTechnologiesMeta) · [`zsh-more-completions`](https://github.com/MenkeTechnologies/zsh-more-completions) · [`zsh-git-acp`](https://github.com/MenkeTechnologies/zsh-git-acp) · [`zsh-expand`](https://github.com/MenkeTechnologies/zsh-expand) · [`zpwr`](https://github.com/MenkeTechnologies/zpwr)
 
 ---
 
-</div>
+## Table of Contents
 
-## `> SYSTEM.INIT`
+- [\[0x00\] `> SYSTEM.INIT`](#0x00-systeminit)
+- [\[0x01\] `> INSTALL.EXEC`](#0x01-installexec)
+- [\[0x02\] `> CONFIG.ENV`](#0x02-configenv)
+- [\[0x03\] `> COMMAND.MATRIX`](#0x03-commandmatrix)
+- [\[0x04\] `> KEYBIND.MAP`](#0x04-keybindmap)
+- [\[0x05\] `> WORKFLOW.EXAMPLE`](#0x05-workflowexample)
+- [\[0x06\] `> PROJECT.STRUCT`](#0x06-projectstruct)
+
+---
+
+## [0x00] `> SYSTEM.INIT`
 
 This plugin turns your terminal into a **persistent knowledge base**. Store what you learn, search it instantly, and drill yourself with randomized quizzes — all without leaving the command line.
 
@@ -35,7 +43,7 @@ This plugin turns your terminal into a **persistent knowledge base**. Store what
 
 ---
 
-## `> INSTALL.EXEC`
+## [0x01] `> INSTALL.EXEC`
 
 ### Zinit
 
@@ -49,7 +57,7 @@ zinit load MenkeTechnologies/zsh-learn
 
 ---
 
-## `> CONFIG.ENV`
+## [0x02] `> CONFIG.ENV`
 
 | Variable | Default | Description |
 |:---|:---|:---|
@@ -68,7 +76,7 @@ export ZPWR_TABLE_NAME="LearningCollection"
 
 ---
 
-## `> COMMAND.MATRIX`
+## [0x03] `> COMMAND.MATRIX`
 
 ### Write Operations
 
@@ -113,7 +121,7 @@ export ZPWR_TABLE_NAME="LearningCollection"
 
 ---
 
-## `> KEYBIND.MAP`
+## [0x04] `> KEYBIND.MAP`
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -131,7 +139,7 @@ bindkey -M vicmd '^k' zsh-learn-Learn
 
 ---
 
-## `> WORKFLOW.EXAMPLE`
+## [0x05] `> WORKFLOW.EXAMPLE`
 
 ```sh
 # 1. Initialize the database
@@ -152,7 +160,7 @@ sef
 
 ---
 
-## `> PROJECT.STRUCT`
+## [0x06] `> PROJECT.STRUCT`
 
 ```
 zsh-learn/
@@ -175,13 +183,3 @@ zsh-learn/
 
 ---
 
-<div align="center">
-
-```
-┌──────────────────────────────────────────────────┐
-│  created by MenkeTechnologies                     │
-│  >> KNOWLEDGE IS THE ONLY CURRENCY THAT COMPOUNDS │
-└──────────────────────────────────────────────────┘
-```
-
-</div>
