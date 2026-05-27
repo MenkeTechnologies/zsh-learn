@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="zsh-learn — MySQL-backed flashcard / quiz collection for zsh. Save snippets, search with fzf, drill yourself with randomized recall.">
+  <title>zsh-learn — Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&amp;family=Share+Tech+Mono&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="hud-static.css">
+  <link rel="stylesheet" href="tutorial.css">
+  <style>
+    .tutorial-main { max-width: 68rem; }
+    .docs-build-line { margin: 0.35rem 0 0; font-family: 'Share Tech Mono', ui-monospace, monospace; font-size: 11px; color: var(--text-dim); letter-spacing: 0.03em; max-width: 42rem; opacity: 0.75; }
+    .hub-scheme-strip { border-bottom: 1px dashed var(--border); background: color-mix(in srgb, var(--bg-secondary) 85%, transparent); padding: 0.55rem 1.5rem 0.65rem; position: relative; }
+    .hub-scheme-strip-inner { max-width: 68rem; margin: 0 auto; display: flex; align-items: center; gap: 0.85rem; }
+    .hub-scheme-strip .hud-scheme-label { flex: 0 0 auto; font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); text-align: left; }
+    .hub-scheme-strip .scheme-grid { flex: 1 1 auto; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+    @media (max-width: 720px) { .hub-scheme-strip-inner { flex-direction: column; align-items: stretch; } .hub-scheme-strip .scheme-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .example-tbl { width: 100%; border-collapse: collapse; margin: 0.6rem 0; font-size: 12.5px; }
+    .example-tbl td { padding: 6px 10px; border: 1px solid var(--border); vertical-align: top; color: var(--text-dim); }
+    .example-tbl td:first-child { width: 28%; color: var(--cyan); font-family: 'Share Tech Mono', monospace; }
+    .example-tbl td code { color: var(--accent-light); background: var(--bg); padding: 1px 5px; font-size: 12px; }
+    .sibling-list { columns: 2; column-gap: 1.5rem; padding-left: 1.1rem; }
+    .sibling-list li { break-inside: avoid; margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div class="app tutorial-app" id="docsApp">
+    <div class="crt-scanline" id="crtH" aria-hidden="true"></div>
+    <div class="crt-scanline-v" id="crtV" aria-hidden="true"></div>
+
+    <header class="tutorial-header">
+      <div class="tutorial-header-inner">
+        <div>
+          <h1 class="tutorial-brand">// ZSH-LEARN &mdash; MYSQL-BACKED LEARNING COLLECTION // SAVE / QUERY / QUIZ</h1>
+          <nav class="tutorial-crumbs" aria-label="Breadcrumb">
+            <span class="current">Docs</span>
+            <span class="sep">/</span>
+            <a href="https://github.com/MenkeTechnologies/zsh-learn" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <span class="sep">/</span>
+            <a href="https://github.com/MenkeTechnologies/zpwr" target="_blank" rel="noopener noreferrer">zpwr</a>
+            <span class="sep">/</span>
+            <a href="https://github.com/MenkeTechnologies/MenkeTechnologiesMeta" target="_blank" rel="noopener noreferrer">Meta</a>
+          </nav>
+          <p class="docs-build-line">zsh plugin · persistent flashcard / snippet store backed by MySQL/MariaDB · fzf fuzzy search · randomized recall · in-place <code>$EDITOR</code></p>
+        </div>
+        <div class="tutorial-toolbar">
+          <button type="button" class="btn btn-secondary" id="btnTheme" title="Toggle light/dark">Theme</button>
+          <button type="button" class="btn btn-secondary active" id="btnCrt" title="CRT scanline overlay">CRT</button>
+          <button type="button" class="btn btn-secondary active" id="btnNeon" title="Neon border pulse">Neon</button>
+          <a class="btn btn-secondary" href="https://github.com/MenkeTechnologies/zsh-learn" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a class="btn btn-secondary" href="https://github.com/MenkeTechnologies/zsh-learn/issues" target="_blank" rel="noopener noreferrer">Issues</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="hub-scheme-strip">
+      <div class="hub-scheme-strip-inner">
+        <span class="hud-scheme-label">// Color scheme</span>
+        <div class="scheme-grid" id="hudSchemeGrid"></div>
+      </div>
+    </div>
+
+    <main class="tutorial-main">
+      <h2 class="tutorial-title"><span class="step-hash">&gt;_</span>ZSH-LEARN</h2>
+      <p class="tutorial-subtitle"><strong>Turn your terminal into a persistent knowledge base.</strong> Save snippets, one-liners, notes. Search with filters, fzf fuzzy matching, or random sampling. Drill yourself with randomized quizzes for spaced recall. Edit in-place with <code>$EDITOR</code>. Backed by MySQL/MariaDB.</p>
+
+      <section class="tutorial-section">
+        <h2>Install</h2>
+<pre># Zinit
+zinit ice lucid nocompile
+zinit load MenkeTechnologies/zsh-learn
+
+# Oh My Zsh
+git clone https://github.com/MenkeTechnologies/zsh-learn \
+    "$HOME/.oh-my-zsh/custom/plugins/zsh-learn"
+# then: plugins+=(zsh-learn)
+
+# Manual
+git clone https://github.com/MenkeTechnologies/zsh-learn
+source zsh-learn/zsh-learn.plugin.zsh</pre>
+        <p>After install: <code>zsh-learn-CreateLearningCollection</code> generates the DDL and creates the table.</p>
+      </section>
+
+      <section class="tutorial-section">
+        <h2>Configuration</h2>
+        <table class="example-tbl">
+          <tbody>
+            <tr><td><code>ZPWR_LEARN_COMMAND</code></td><td>default <code>mysql</code> &mdash; database command to execute queries</td></tr>
+            <tr><td><code>ZPWR_SCHEMA_NAME</code></td><td>default <code>root</code> &mdash; schema name for the learning table</td></tr>
+            <tr><td><code>ZPWR_TABLE_NAME</code></td><td>default <code>LearningCollection</code> &mdash; table name for stored entries</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="tutorial-section">
+        <h2>Command matrix</h2>
+        <table class="example-tbl">
+          <tbody>
+            <tr><td><code>le LEARNING</code></td><td>insert a new entry</td></tr>
+            <tr><td><code>editl ID</code></td><td>open entry by ID in <code>$EDITOR</code></td></tr>
+            <tr><td><code>del [N]</code> / <code>delid ID</code></td><td>delete last N (default 1) / delete by ID</td></tr>
+            <tr><td><code>se [FILTER...]</code></td><td>search the learning column with optional filters</td></tr>
+            <tr><td><code>see</code> / <code>seee</code></td><td>also show category / category + date</td></tr>
+            <tr><td><code>sef</code></td><td>search all via fzf (most recent first)</td></tr>
+            <tr><td><code>ser [N]</code> / <code>sera</code></td><td>N random (default 100) / all random</td></tr>
+            <tr><td><code>qu [N]</code> / <code>qua</code></td><td>N random into fzf / all randomized into fzf</td></tr>
+            <tr><td><code>re</code> / <code>rsql</code></td><td>print SQL update statements / open in vim</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="tutorial-section">
+        <h2>Key bindings</h2>
+        <table class="example-tbl">
+          <tbody>
+            <tr><td><code>^k</code> (viins + vicmd)</td><td><code>zsh-learn-Learn</code> &mdash; insert the current buffer as a learning entry</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="tutorial-section">
+        <h2>Sibling plugins</h2>
+        <p>Part of the MenkeTechnologies zsh plugin family &mdash; the <a href="https://github.com/MenkeTechnologies/MenkeTechnologiesMeta">MenkeTechnologiesMeta</a> umbrella:</p>
+        <ul class="sibling-list">
+          <li><a href="https://github.com/MenkeTechnologies/zsh-better-npm-completion">zsh-better-npm-completion</a> &mdash; cache-aware <code>npm install</code> completion</li>
+          <li><a href="https://github.com/MenkeTechnologies/zsh-cargo-completion">zsh-cargo-completion</a> &mdash; live <code>cargo add</code> / <code>cargo install</code> completion</li>
+          <li><a href="https://github.com/MenkeTechnologies/zsh-cpan-completion">zsh-cpan-completion</a> &mdash; live MetaCPAN <code>cpan</code> / <code>cpanm</code> completion</li>
+          <li><a href="https://github.com/MenkeTechnologies/zsh-dotnet-completion">zsh-dotnet-completion</a> &mdash; dotnet CLI completion</li>
+          <li><a href="https://github.com/MenkeTechnologies/zsh-expand">zsh-expand</a> &mdash; spacebar expansion (11,683 tests)</li>
+          <li><a href="https://github.com/MenkeTechnologies/zsh-gem-completion">zsh-gem-completion</a> &mdash; ruby <code>gem install</code> remote completion</li>
+          <li><a href="https://github.com/MenkeTechnologies/zsh-git-acp">zsh-git-acp</a> &mdash; 159 git aliases + add/commit/push keybindings</li>
+          <li><a href="https://github.com/MenkeTechnologies/zsh-git-repo-cache">zsh-git-repo-cache</a> &mdash; index every git repo on disk</li>
+          <li><a href="https://github.com/MenkeTechnologies/zsh-more-completions">zsh-more-completions</a> &mdash; 27,790-file mega completion corpus</li>
+          <li><a href="https://github.com/MenkeTechnologies/zsh-nginx">zsh-nginx</a> &mdash; nginx commands + service-wrapper aliases</li>
+          <li><a href="https://github.com/MenkeTechnologies/zsh-pip-description-completion">zsh-pip-description-completion</a> &mdash; pip remote completion with descriptions</li>
+          <li><a href="https://github.com/MenkeTechnologies/zsh-sed-sub">zsh-sed-sub</a> &mdash; in-place sed substitution on the command line</li>
+          <li><a href="https://github.com/MenkeTechnologies/zsh-sudo">zsh-sudo</a> &mdash; ESC ESC to prepend sudo</li>
+          <li><a href="https://github.com/MenkeTechnologies/zsh-xcode-completions">zsh-xcode-completions</a> &mdash; xcodebuild / xcrun / swift completion</li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+  <script src="hud-theme.js"></script>
+</body>
+</html>
