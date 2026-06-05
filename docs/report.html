@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="zsh-learn — Engineering report. MySQL/MariaDB-backed personal knowledge plugin for zsh: save snippets, search with fzf, drill yourself with randomized recall. 833 zsh lines across 1 entry + 26 autoload functions, 453 zunit @test blocks across 6 t-*.zsh files, 16 aliases, Ctrl+K ZLE widget bound across viins/vicmd/emacs maps, 3 search verbs (se/see/seee) staged by column count, 4 quiz/random-recall verbs (qu/qua/ser/sera), SQL passthrough via re/rsql.">
+  <title>zsh-learn &mdash; Engineering Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&amp;family=Share+Tech+Mono&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="hud-static.css">
+  <link rel="stylesheet" href="tutorial.css">
+  <style>
+    .tutorial-main { max-width: 72rem; }
+    .stat-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(13rem,1fr));gap:0.7rem;margin:1rem 0; }
+    .stat-card { border:1px solid var(--border);border-top:3px solid var(--cyan);background:var(--bg-card);padding:0.85rem 1rem;border-radius:2px;text-align:center; }
+    .stat-card .stat-val { font-family:'Orbitron',sans-serif;font-size:26px;font-weight:900;color:var(--cyan);line-height:1.1;text-shadow:0 0 18px var(--cyan-glow); }
+    .stat-card .stat-val.accent { color:var(--accent);text-shadow:0 0 18px var(--accent-glow); }
+    .stat-card .stat-val.green  { color:var(--green);text-shadow:0 0 18px rgba(57,255,20,.3); }
+    .stat-card .stat-label { font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);margin-top:0.45rem; }
+    .file-table { width:100%;border-collapse:collapse;margin:0.6rem 0;font-size:12px; }
+    .file-table th { background:var(--bg-secondary);color:var(--cyan);font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;text-align:left;padding:7px 10px;border:1px solid var(--border); }
+    .file-table td { padding:6px 10px;border:1px solid var(--border);color:var(--text-dim);vertical-align:middle; }
+    .file-table tr:hover td { background:var(--bg-hover); }
+    .file-table td:first-child { font-family:'Share Tech Mono',monospace;color:var(--accent-light);font-weight:600;white-space:nowrap; }
+    .file-table .num { text-align:right;font-family:'Share Tech Mono',monospace; }
+    .file-table .total-row td { background:var(--bg-secondary);font-weight:700;color:var(--text);border-top:2px solid var(--cyan); }
+    .file-table code { font-size:11px;color:var(--accent-light);background:var(--bg-primary);padding:1px 4px;border-radius:2px; }
+    .feature-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(20rem,1fr));gap:0.65rem;margin:0.8rem 0; }
+    .feature-card { border:1px solid var(--border);border-left:3px solid var(--cyan);background:var(--bg-card);padding:0.7rem 1rem;border-radius:2px; }
+    .feature-card h4 { font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);margin:0 0 0.3rem; }
+    .feature-card p { margin:0;font-size:11px;color:var(--text-dim);line-height:1.55; }
+    .feature-card code { font-size:10.5px;color:var(--accent-light);background:var(--bg-primary);padding:1px 4px;border-radius:2px; }
+    .section-rule { border:none;border-top:1px dashed var(--border);margin:1.8rem 0; }
+  </style>
+</head>
+<body>
+  <div class="app tutorial-app" id="reportApp">
+    <div class="crt-scanline" id="crtH" aria-hidden="true"></div>
+    <div class="crt-scanline-v" id="crtV" aria-hidden="true"></div>
+
+    <header class="tutorial-header">
+      <div class="tutorial-header-inner">
+        <div>
+          <h1 class="tutorial-brand">// ZSH-LEARN &mdash; ENGINEERING REPORT</h1>
+          <nav class="tutorial-crumbs" aria-label="Breadcrumb">
+            <span class="current">Engineering Report</span>
+            <span class="sep">/</span>
+            <a href="index.html">Docs</a>
+            <span class="sep">/</span>
+            <a href="https://github.com/MenkeTechnologies/zsh-learn" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <span class="sep">/</span>
+            <a href="https://github.com/MenkeTechnologies/zpwr" target="_blank" rel="noopener noreferrer">zpwr</a>
+            <span class="sep">/</span>
+            <a href="https://github.com/MenkeTechnologies/MenkeTechnologiesMeta" target="_blank" rel="noopener noreferrer">Meta</a>
+          </nav>
+          <p style="margin:0.35rem 0 0;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:0.03em;opacity:0.75;">
+            MySQL / MariaDB-backed knowledge plugin &middot; <code>le</code> to save &middot; <code>se</code> / <code>see</code> / <code>seee</code> to search &middot; <code>qu</code> / <code>qua</code> to quiz &middot; <kbd>Ctrl-K</kbd> ZLE widget
+          </p>
+        </div>
+        <div class="tutorial-toolbar">
+          <button type="button" class="btn btn-secondary" id="btnTheme" title="Toggle light/dark">Theme</button>
+          <button type="button" class="btn btn-secondary active" id="btnCrt" title="CRT scanline overlay">CRT</button>
+          <button type="button" class="btn btn-secondary active" id="btnNeon" title="Neon border pulse">Neon</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="tutorial-main">
+
+      <h2 class="tutorial-title"><span class="step-hash">&gt;_</span>EXECUTIVE SUMMARY</h2>
+      <p class="tutorial-subtitle">
+        <strong>zsh-learn</strong> is a MySQL/MariaDB-backed flashcard plugin for zsh. Every entry is a row in a <code>$ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME</code> table (default <code>root.LearningCollection</code>); the plugin ships save / search / random-recall / quiz / SQL-passthrough / in-place-edit / delete operations as autoloaded zsh functions. <code>le "git rebase -i HEAD~3"</code> writes the row, <code>se rebase</code> searches it, <code>qu 50</code> pipes 50 random entries into <code>fzf</code> for spaced-recall drilling. The plugin's database surface is the same one consumed by the <a href="https://github.com/MenkeTechnologies/LearningCollectionAPI" target="_blank" rel="noopener noreferrer">LearningCollectionAPI</a> Spring Boot service &mdash; the zsh CLI and the web/REST API operate on the same authoritative table. Source: <strong>833 zsh lines</strong> across <strong>1 plugin entry + 26 autoload functions + 1 completion</strong>. Pinned by <strong>453 <code>@test</code> blocks</strong> across <strong>6 zunit files</strong>.
+      </p>
+
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-val">833</div><div class="stat-label">Zsh Lines</div></div>
+        <div class="stat-card"><div class="stat-val green">453</div><div class="stat-label">@test Blocks (zunit)</div></div>
+        <div class="stat-card"><div class="stat-val">6</div><div class="stat-label">Test Files</div></div>
+        <div class="stat-card"><div class="stat-val accent">26</div><div class="stat-label">Autoload Fns</div></div>
+        <div class="stat-card"><div class="stat-val">16</div><div class="stat-label">Aliases (typo-proof verbs)</div></div>
+        <div class="stat-card"><div class="stat-val">3</div><div class="stat-label">ZLE Bindkeys (viins/vicmd/emacs)</div></div>
+        <div class="stat-card"><div class="stat-val">1</div><div class="stat-label">Compdef (_se)</div></div>
+        <div class="stat-card"><div class="stat-val">6</div><div class="stat-label">fzf Completer Hooks</div></div>
+      </div>
+
+      <hr class="section-rule">
+
+      <h2 class="tutorial-title"><span class="step-hash">~</span>ARCHITECTURE</h2>
+      <p class="tutorial-subtitle">Single entry point that conditionally registers ZLE + zstyle + bindkeys, then autoloads every function under <code>autoload/</code> via <code>autoload -Uz "${0:h}/autoload/"*(.:t)</code>. Each verb is its own one-file function &mdash; lazy-loaded on first use.</p>
+
+      <table class="file-table">
+        <thead>
+          <tr><th>File / Group</th><th class="num">Lines</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>zsh-learn.plugin.zsh</code></td>
+            <td class="num">137</td>
+            <td>Plugin entry. Declares <code>ZPWR_VARS</code> association; sets defaults for <code>ZPWR_SCHEMA_NAME</code> / <code>ZPWR_TABLE_NAME</code> / <code>ZPWR_LEARN_COMMAND</code> / temp paths; declares 16 alias-as-verb pinned shortcuts (<code>le</code>, <code>se</code>, <code>see</code>, <code>seee</code>, <code>re</code>, <code>rsql</code>, <code>editl</code>, <code>delid</code>, plus typo variants <code>es</code>/<code>ees</code>/<code>ses</code>/<code>ese</code>/<code>sse</code>/<code>ssee</code>/<code>rer</code>/<code>er</code>); populates <code>ZPWR_VERBS</code> association when zpwr is loaded; registers per-completion <code>zstyle</code> (group-order, list-colors, sort-disabled for numeric IDs); binds <kbd>Ctrl-K</kbd> across <code>viins</code> / <code>vicmd</code> / <code>emacs</code> keymaps; prepends <code>${0:h}/src</code> + <code>${0:h}/autoload</code> to <code>fpath</code>; autoloads all 26 functions under <code>autoload/</code>.</td>
+          </tr>
+          <tr>
+            <td><code>autoload/zsh-learn-Learn</code></td>
+            <td class="num">40</td>
+            <td>Core ZLE widget. Prompts via the current line buffer, formats the entry, dispatches to <code>zsh-learn-Savel</code>. Bound to <kbd>Ctrl-K</kbd>.</td>
+          </tr>
+          <tr>
+            <td><code>autoload/zsh-learn-Savel</code></td>
+            <td class="num">57</td>
+            <td>The insert path. Escapes apostrophes, length-checks against <code>ZPWR_LEARN_MAX_SIZE</code> (default 3000), composes the SQL <code>INSERT</code>, dispatches via <code>$ZPWR_LEARN_COMMAND $ZPWR_SCHEMA_NAME</code> (default <code>mysql root</code>).</td>
+          </tr>
+          <tr>
+            <td><code>autoload/zsh-learn-Searchl</code> &middot; <code>Searchle</code> &middot; <code>Searchlee</code></td>
+            <td class="num">71 / 72 / 21</td>
+            <td>Three-tier search functions, fronted by <code>se</code> / <code>see</code> / <code>seee</code> respectively. Each tier widens the projected column set (learning &rarr; learning+category &rarr; learning+category+date). All three accept filter arguments and apply them via SQL <code>WHERE ... LIKE ...</code>.</td>
+          </tr>
+          <tr>
+            <td><code>autoload/zsh-learn-Redo</code> &middot; <code>Redosql</code></td>
+            <td class="num">21 / 29</td>
+            <td>SQL passthrough. <code>re ID</code> prints the matched row plus a ready-to-edit <code>UPDATE</code> statement; <code>rsql ID</code> opens the same in <code>$EDITOR</code>.</td>
+          </tr>
+          <tr>
+            <td><code>autoload/zsh-learn-Editl</code> &middot; <code>DeleteId</code> &middot; <code>del</code></td>
+            <td class="num">35 / 11 / 9</td>
+            <td>In-place edit via <code>$EDITOR</code>; targeted delete by ID; bulk delete of last N rows.</td>
+          </tr>
+          <tr>
+            <td><code>autoload/qu</code> &middot; <code>qua</code> &middot; <code>ser</code> &middot; <code>sera</code> &middot; <code>sef</code></td>
+            <td class="num">14 / 8 / 13 / 8 / 12</td>
+            <td>Random-recall family. <code>ser N</code> = N random rows; <code>sera</code> = all randomized; <code>qu N</code> = same as <code>ser</code> but piped to <code>fzf</code> for interactive quiz; <code>qua</code> = all randomized into fzf; <code>sef</code> = recency-ordered fzf browse.</td>
+          </tr>
+          <tr>
+            <td><code>autoload/zsh-learn-CreateLearningCollection</code> &middot; <code>DropLearningCollection</code></td>
+            <td class="num">65 / 61</td>
+            <td>DDL admin. <code>Create</code> emits the schema (id PK + auto-increment, learning TEXT, category VARCHAR, timestamp), <code>Drop</code> tears it down. Largest single autoload files because they carry the literal DDL strings.</td>
+          </tr>
+          <tr>
+            <td><code>autoload/zsh-learn-Get</code> &middot; <code>GetItems</code> &middot; <code>GetLastItem</code></td>
+            <td class="num">20 / 42 / 12</td>
+            <td>Read primitives used by the search/redo verbs internally.</td>
+          </tr>
+          <tr>
+            <td><code>autoload/_fzf_complete_{se,redo,rsql}</code> + <code>_post</code></td>
+            <td class="num">11 + 8 (&times; 3)</td>
+            <td>fzf-tab integration hooks. When <a href="https://github.com/Aloxaf/fzf-tab" target="_blank" rel="noopener noreferrer">fzf-tab</a> or <a href="https://github.com/junegunn/fzf" target="_blank" rel="noopener noreferrer">fzf</a>'s shell-completer is loaded, these widgets feed candidate IDs / learning rows directly into fzf.</td>
+          </tr>
+          <tr>
+            <td><code>src/_se</code></td>
+            <td class="num">18</td>
+            <td>compdef completion shared by <code>se</code> / <code>see</code> / <code>seee</code> / <code>re</code> / <code>rsql</code> / <code>zsh-learn-Redo</code> / <code>zsh-learn-Redosql</code> / <code>zsh-learn-Searchl</code> / <code>zsh-learn-Searchle</code> / <code>zsh-learn-Searchlee</code>.</td>
+          </tr>
+          <tr class="total-row">
+            <td>Total source</td>
+            <td class="num">833</td>
+            <td>1 entry + 26 autoloads + 1 completion &middot; pure zsh</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr class="section-rule">
+
+      <h2 class="tutorial-title"><span class="step-hash">#</span>TEST COVERAGE</h2>
+      <p class="tutorial-subtitle"><strong>453</strong> <code>@test</code> blocks across <strong>6</strong> zunit files. <code>t-unit.zsh</code> carries the bulk (432) &mdash; behavioral pins for every verb against a fixture <code>$ZPWR_LEARN_COMMAND</code> stub. The 4 contract files pin install-path / fpath / autoload shape.</p>
+
+      <table class="file-table">
+        <thead><tr><th>File</th><th class="num">Tests</th><th>Pins</th></tr></thead>
+        <tbody>
+          <tr><td><code>t-unit.zsh</code></td><td class="num">432</td><td>Every verb (<code>le</code>, <code>se</code>, <code>see</code>, <code>seee</code>, <code>ser</code>, <code>sera</code>, <code>qu</code>, <code>qua</code>, <code>sef</code>, <code>re</code>, <code>rsql</code>, <code>editl</code>, <code>del</code>, <code>delid</code>, <code>Create</code>/<code>Drop</code>) emits the documented SQL shape against a mocked <code>$ZPWR_LEARN_COMMAND</code>; apostrophe-escape behavior; length-cap behavior; verb-typo aliases resolve to the canonical function.</td></tr>
+          <tr><td><code>t-syntax.zsh</code></td><td class="num">2</td><td><code>zsh -n</code> over plugin entry + autoload tree.</td></tr>
+          <tr><td><code>t-contract.zsh</code></td><td class="num">3</td><td>Entrypoint stem matches dir; entrypoint parses; <code>#compdef</code> on every <code>_*</code> file.</td></tr>
+          <tr><td><code>t-contract2.zsh</code></td><td class="num">6</td><td>fpath augmentation includes both <code>src/</code> AND <code>autoload/</code>; autoload glob picks up every file under <code>autoload/</code> with <code>(.:t)</code>.</td></tr>
+          <tr><td><code>t-contract3.zsh</code></td><td class="num">5</td><td>Zinit-style install path stability; <code>ZPWR_LEARN=false</code> opt-out skips bindkey/zstyle registration.</td></tr>
+          <tr><td><code>t-contract4.zsh</code></td><td class="num">5</td><td>OMZ-style install path; <code>ZPWR_VARS</code> initialized as association on first source; ZLE widget registered exactly once.</td></tr>
+          <tr class="total-row"><td>Total</td><td class="num">453</td><td>6 zunit files &middot; verb-surface + install-contract</td></tr>
+        </tbody>
+      </table>
+
+      <hr class="section-rule">
+
+      <h2 class="tutorial-title"><span class="step-hash">/</span>INTEGRATION</h2>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>Database backend</h4>
+          <p>Default: <code>mysql</code> command, schema <code>root</code>, table <code>LearningCollection</code>. Override via <code>ZPWR_LEARN_COMMAND</code> (e.g. <code>'sudo mysql'</code> for MariaDB unix-auth) and <code>ZPWR_SCHEMA_NAME</code> / <code>ZPWR_TABLE_NAME</code>. <code>zsh-learn-CreateLearningCollection</code> emits the DDL the first time.</p>
+        </div>
+        <div class="feature-card">
+          <h4>LearningCollectionAPI cross-stack</h4>
+          <p>The same <code>$ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME</code> rows are consumed by the <a href="https://github.com/MenkeTechnologies/LearningCollectionAPI" target="_blank" rel="noopener noreferrer">LearningCollectionAPI</a> Spring Boot REST service &mdash; entries saved from zsh are immediately readable from the web app, and vice versa. One source of truth, two front-ends.</p>
+        </div>
+        <div class="feature-card">
+          <h4>ZLE widget binding</h4>
+          <p><code>zle -N zsh-learn-Learn</code> registers the widget; the file then binds <kbd>Ctrl-K</kbd> in <em>three</em> keymaps (<code>viins</code>, <code>vicmd</code>, <code>emacs</code>) so the binding survives any <code>$KEYMAP</code> setting in the user's <code>.zshrc</code>. Vim-emulation users press <kbd>Ctrl-K</kbd> in insert OR command mode; emacs-mode users press <kbd>Ctrl-K</kbd> directly.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Completion: numeric IDs, ordered, color-coded</h4>
+          <p>The plugin sets three <code>zstyle</code> contracts on the <code>_se</code> completion: <code>sort false</code> (preserve numeric-DESC server order rather than lexicographic), <code>group-order</code> to put IDs before learning text, and per-group <code>list-colors</code> for ID vs text contrast.</p>
+        </div>
+        <div class="feature-card">
+          <h4>fzf integration</h4>
+          <p>If <code>fzf</code>'s shell-completer is loaded, the six <code>_fzf_complete_se/redo/rsql</code> hooks intercept the <kbd>**TAB</kbd> trigger and feed live database rows into fzf &mdash; same backend as the inline search, different presentation.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Lazy autoload + Zsh Plugin Standard</h4>
+          <p>Each verb file under <code>autoload/</code> is one function. The plugin entry registers them via <code>autoload -Uz</code> &mdash; nothing is parsed until first call. Honors the <a href="https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html" target="_blank" rel="noopener noreferrer">Zsh Plugin Standard</a> <code>0=</code> header so <code>${0:h}</code> resolves correctly under zinit / oh-my-zsh / antibody / antigen / bare source.</p>
+        </div>
+      </div>
+
+      <hr class="section-rule">
+
+      <h2 class="tutorial-title"><span class="step-hash">!</span>DESIGN DECISIONS</h2>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>SQL backend, not an embedded SQLite</h4>
+          <p>Embedded SQLite would isolate the data to one shell host. MySQL/MariaDB lets the same table be served by the <a href="https://github.com/MenkeTechnologies/LearningCollectionAPI" target="_blank" rel="noopener noreferrer">LearningCollectionAPI</a> Spring Boot service &mdash; the user's notes are accessible from any browser, any cron job, any sibling process. Cost: a running mysqld. Gain: a personal knowledge graph that isn't bound to one terminal.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Typo-proof verb aliases</h4>
+          <p>16 aliases mapped to 7 canonical functions. <code>es</code> / <code>ees</code> / <code>ses</code> / <code>ese</code> / <code>sse</code> / <code>ssee</code> all dispatch to <code>zsh-learn-Searchl</code>; <code>re</code> / <code>rer</code> / <code>er</code> all dispatch to <code>zsh-learn-Redo</code>. Muscle-memory typos still work &mdash; the operator never has to remember the exact spelling.</p>
+        </div>
+        <div class="feature-card">
+          <h4>3-tier search by projected columns</h4>
+          <p>Naive plugins would have one <code>search</code> with a <code>--verbose</code> flag. <code>zsh-learn</code> instead ships three named verbs (<code>se</code> &lt; <code>see</code> &lt; <code>seee</code>) corresponding to projected-column count. Saves a flag, makes the cardinality explicit in the verb itself, and pre-renders the <code>zstyle group-order</code> per verb.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Three keymaps for one widget</h4>
+          <p><code>bindkey</code> applies to one keymap at a time. The plugin doesn't try to detect the user's mode &mdash; it just registers <kbd>Ctrl-K</kbd> against all three of <code>viins</code>, <code>vicmd</code>, <code>emacs</code>. Total cost: three bindkey calls. Total gain: never lose access to <code>Learn</code> after a mode switch.</p>
+        </div>
+        <div class="feature-card">
+          <h4><code>noglob</code> on every alias</h4>
+          <p>Every alias is <code>noglob zsh-learn-*</code>. Search filters contain <code>*</code>, <code>?</code>, <code>[]</code> &mdash; without <code>noglob</code> the shell would glob-expand them against the local filesystem before the function ever saw them. <code>noglob</code> at alias time is one keystroke for the operator and zero behavioral surprises.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Verb-as-file, not verb-as-block</h4>
+          <p>26 separate files under <code>autoload/</code> instead of one mega-file. Each function lazy-loads on first call, so cold-startup cost is just the entry-point parse (~137 lines). Editing one verb does not invalidate any compiled <code>.zwc</code> for the others.</p>
+        </div>
+      </div>
+
+      <hr class="section-rule">
+
+      <h2 class="tutorial-title"><span class="step-hash">@</span>FOOTPRINT</h2>
+      <ul style="font-size:12px;color:var(--text-dim);line-height:1.7;">
+        <li><strong>Disk</strong>: ~28 files under <code>autoload/</code> + <code>src/_se</code> + plugin entry. No compiled artifacts.</li>
+        <li><strong>Memory</strong>: <code>ZPWR_VARS</code> association + the <code>ZPWR_VERBS</code> entries (when zpwr is loaded) + the autoloaded function table. Zero data structures &mdash; everything is in MySQL.</li>
+        <li><strong>Startup cost</strong>: 137-line entry parse + <code>autoload -Uz</code> registration (no compile, no body parse).</li>
+        <li><strong>Runtime cost</strong>: one <code>$ZPWR_LEARN_COMMAND</code> subprocess per verb invocation. Search latency is bounded by the configured <code>maxRecords</code> (default 2000) row count.</li>
+        <li><strong>External tools</strong>: <code>mysql</code> (required), <code>fzf</code> (optional, for <code>qu</code> / <code>qua</code> / <code>sef</code>), <code>$EDITOR</code> (for <code>editl</code> / <code>rsql</code>).</li>
+      </ul>
+
+    </main>
+
+    <footer style="text-align:center;padding:2rem;font-size:10px;color:var(--text-muted);font-family:'Orbitron',sans-serif;letter-spacing:2px;">
+      ZSH-LEARN ENGINEERING REPORT &middot; 833 ZSH LINES &middot; 453 ZUNIT TESTS &middot; 26 AUTOLOAD FNS &middot; 16 ALIASES &middot; 3 KEYMAPS &middot; MYSQL BACKEND &middot; LEARNINGCOLLECTIONAPI CROSS-STACK &middot; MENKETECHNOLOGIES
+    </footer>
+  </div>
+
+  <script>
+    const html = document.documentElement;
+    const btnTheme = document.getElementById('btnTheme');
+    const btnCrt = document.getElementById('btnCrt');
+    const btnNeon = document.getElementById('btnNeon');
+    const crtH = document.getElementById('crtH');
+    const crtV = document.getElementById('crtV');
+    btnTheme?.addEventListener('click', () => {
+      html.setAttribute('data-theme', html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+    });
+    btnCrt?.addEventListener('click', () => {
+      btnCrt.classList.toggle('active');
+      const on = btnCrt.classList.contains('active');
+      if (crtH) crtH.style.display = on ? '' : 'none';
+      if (crtV) crtV.style.display = on ? '' : 'none';
+    });
+    btnNeon?.addEventListener('click', () => {
+      btnNeon.classList.toggle('active');
+      document.querySelector('.app')?.classList.toggle('neon-off');
+    });
+  </script>
+</body>
+</html>
