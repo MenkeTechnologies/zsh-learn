@@ -74,6 +74,10 @@ export ZPWR_SCHEMA_NAME="root"
 export ZPWR_TABLE_NAME="LearningCollection"
 ```
 
+> Migration: the default table name was `LearningCollectiion` (typo) before the rename.
+> Existing installs: `RENAME TABLE root.LearningCollectiion TO root.LearningCollection;`
+> or keep the old table with `export ZPWR_TABLE_NAME=LearningCollectiion`.
+
 ---
 
 ## [0x03] `> COMMAND.MATRIX`

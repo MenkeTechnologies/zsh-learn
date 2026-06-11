@@ -126,10 +126,10 @@
     assert "$_val" same_as "root"
 }
 
-@test 'env - ZPWR_TABLE_NAME defaults to LearningCollectiion' {
+@test 'env - ZPWR_TABLE_NAME defaults to LearningCollection' {
     local _val
     _val="$(env -i HOME="$HOME" zsh --no-rcs -c 'ZPWR_LEARN=false; source "'"$pluginDir"'/zsh-learn.plugin.zsh"; echo "$ZPWR_TABLE_NAME"' 2>/dev/null)"
-    assert "$_val" same_as "LearningCollectiion"
+    assert "$_val" same_as "LearningCollection"
 }
 
 @test 'env - ZPWR_TEMPFILE defaults to /tmp/.zpwr-temp' {
