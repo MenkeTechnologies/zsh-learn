@@ -56,16 +56,17 @@
     assert "$out" same_as '2000'
 }
 
-@test 'ZPWR_SCHEMA_NAME defaults to "root" and ZPWR_TABLE_NAME to "LearningCollectiion"' {
-    # Pin: the SQL backend reads these as the FROM clause. Renaming
-    # either breaks every running mysql client that targets the
-    # collection. Yes, the upstream typo "LearningCollectiion" is
-    # the persistent identifier — DO NOT "fix" it without a migration.
+@test 'ZPWR_SCHEMA_NAME defaults to "root" and ZPWR_TABLE_NAME to "LearningCollection"' {
+    # Pin: the SQL backend reads these as the FROM clause. The historic
+    # default carried a typo ("LearningCollectiion"); it was renamed to
+    # the correct spelling. Existing installs must migrate once:
+    #   RENAME TABLE root.LearningCollectiion TO root.LearningCollection;
+    # or export ZPWR_TABLE_NAME=LearningCollectiion before sourcing.
     local schema table
     schema=$(zsh -c "emulate zsh; unset ZPWR_SCHEMA_NAME; source '$pluginFile' 2>/dev/null; print \$ZPWR_SCHEMA_NAME")
     table=$(zsh -c "emulate zsh; unset ZPWR_TABLE_NAME; source '$pluginFile' 2>/dev/null; print \$ZPWR_TABLE_NAME")
     assert "$schema" same_as 'root'
-    assert "$table" same_as 'LearningCollectiion'
+    assert "$table" same_as 'LearningCollection'
 }
 
 @test 'ZPWR_LEARN_COMMAND defaults to "mysql" (backend dispatch contract)' {
