@@ -129,12 +129,14 @@ export ZPWR_TABLE_NAME="LearningCollection"
 │  ─────────────────────────────────────────── │
 │  vim insert    Ctrl+K      zsh-learn-Learn   │
 │  vim normal    Ctrl+K      zsh-learn-Learn   │
+│  emacs         Ctrl+K      zsh-learn-Learn   │
 └─────────────────────────────────────────────┘
 ```
 
 ```sh
 bindkey -M viins '^k' zsh-learn-Learn
 bindkey -M vicmd '^k' zsh-learn-Learn
+bindkey -M emacs '^k' zsh-learn-Learn
 ```
 
 ---
@@ -169,16 +171,18 @@ zsh-learn/
 │   ├── zsh-learn-Learn       # Core insert function
 │   ├── zsh-learn-Searchl     # Search engine
 │   ├── zsh-learn-Get         # Query interface
-│   ├── del / delid           # Delete operations
+│   ├── del                   # Delete operations
+│   ├── zsh-learn-DeleteId    # Delete by ID (delid alias)
 │   ├── qu / qua              # Quiz functions
-│   ├── se / see / seee / sef # Search variants
+│   ├── sef                   # fzf search (se/see/seee are plugin aliases)
 │   ├── ser / sera            # Random recall
 │   └── ...                   # Additional utilities
 ├── src/                      # Completions
 │   └── _se                   # Tab completion for se
 └── tests/                    # Test suite
     ├── t-syntax.zsh          # Syntax validation
-    └── t-unit.zsh            # Unit tests
+    ├── t-unit.zsh            # Unit tests
+    └── ...                   # Contract + repo hygiene checks
 ```
 
 ---
