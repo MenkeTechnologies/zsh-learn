@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark light">
-  <meta name="description" content="zsh-learn — Engineering report. MySQL/MariaDB-backed personal knowledge plugin for zsh: save snippets, search with fzf, drill yourself with randomized recall. 833 zsh lines across 1 entry + 26 autoload functions, 453 zunit @test blocks across 6 t-*.zsh files, 16 aliases, Ctrl+K ZLE widget bound across viins/vicmd/emacs maps, 3 search verbs (se/see/seee) staged by column count, 4 quiz/random-recall verbs (qu/qua/ser/sera), SQL passthrough via re/rsql.">
+  <meta name="description" content="zsh-learn — Engineering report. MySQL/MariaDB-backed personal knowledge plugin for zsh: save snippets, search with fzf, drill yourself with randomized recall. 833 zsh lines across 1 entry + 26 autoload functions + 1 completion, 457 zunit @test blocks across 7 t-*.zsh files, 16 aliases, Ctrl+K ZLE widget bound across viins/vicmd/emacs maps, 3 search verbs (se/see/seee) staged by column count, 4 quiz/random-recall verbs (qu/qua/ser/sera), SQL passthrough via re/rsql, in-place edit via editl/rsql, le -e/-c flags.">
   <title>zsh-learn &mdash; Engineering Report</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,13 +71,13 @@
 
       <h2 class="tutorial-title"><span class="step-hash">&gt;_</span>EXECUTIVE SUMMARY</h2>
       <p class="tutorial-subtitle">
-        <strong>zsh-learn</strong> is a MySQL/MariaDB-backed flashcard plugin for zsh. Every entry is a row in a <code>$ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME</code> table (default <code>root.LearningCollection</code>); the plugin ships save / search / random-recall / quiz / SQL-passthrough / in-place-edit / delete operations as autoloaded zsh functions. <code>le "git rebase -i HEAD~3"</code> writes the row, <code>se rebase</code> searches it, <code>qu 50</code> pipes 50 random entries into <code>fzf</code> for spaced-recall drilling. The plugin's database surface is the same one consumed by the <a href="https://github.com/MenkeTechnologies/LearningCollectionAPI" target="_blank" rel="noopener noreferrer">LearningCollectionAPI</a> Spring Boot service &mdash; the zsh CLI and the web/REST API operate on the same authoritative table. Source: <strong>833 zsh lines</strong> across <strong>1 plugin entry + 26 autoload functions + 1 completion</strong>. Pinned by <strong>453 <code>@test</code> blocks</strong> across <strong>6 zunit files</strong>.
+        <strong>zsh-learn</strong> is a MySQL/MariaDB-backed flashcard plugin for zsh. Every entry is a row in a <code>$ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME</code> table (default <code>root.LearningCollection</code>); the plugin ships save / search / random-recall / quiz / SQL-passthrough / in-place-edit / delete operations as autoloaded zsh functions. <code>le "git rebase -i HEAD~3"</code> writes the row, <code>se rebase</code> searches it, <code>qu 50</code> pipes 50 random entries into <code>fzf</code> for spaced-recall drilling. The plugin's database surface is the same one consumed by the <a href="https://github.com/MenkeTechnologies/LearningCollectionAPI" target="_blank" rel="noopener noreferrer">LearningCollectionAPI</a> Spring Boot service &mdash; the zsh CLI and the web/REST API operate on the same authoritative table. Source: <strong>833 zsh lines</strong> across <strong>1 plugin entry + 26 autoload functions + 1 completion</strong>. Pinned by <strong>457 <code>@test</code> blocks</strong> across <strong>7 zunit files</strong>.
       </p>
 
       <div class="stat-grid">
         <div class="stat-card"><div class="stat-val">833</div><div class="stat-label">Zsh Lines</div></div>
-        <div class="stat-card"><div class="stat-val green">453</div><div class="stat-label">@test Blocks (zunit)</div></div>
-        <div class="stat-card"><div class="stat-val">6</div><div class="stat-label">Test Files</div></div>
+        <div class="stat-card"><div class="stat-val green">457</div><div class="stat-label">@test Blocks (zunit)</div></div>
+        <div class="stat-card"><div class="stat-val">7</div><div class="stat-label">Test Files</div></div>
         <div class="stat-card"><div class="stat-val accent">26</div><div class="stat-label">Autoload Fns</div></div>
         <div class="stat-card"><div class="stat-val">16</div><div class="stat-label">Aliases (typo-proof verbs)</div></div>
         <div class="stat-card"><div class="stat-val">3</div><div class="stat-label">ZLE Bindkeys (viins/vicmd/emacs)</div></div>
@@ -160,19 +160,65 @@
 
       <hr class="section-rule">
 
+      <h2 class="tutorial-title"><span class="step-hash">$</span>VERB SQL CONTRACT</h2>
+      <p class="tutorial-subtitle">Every verb is a thin shell wrapper that composes a SQL statement and pipes it into <code>${=ZPWR_LEARN_COMMAND}</code>. The table below is the exact statement each verb emits (table name templated as <code>$ZPWR_SCHEMA_NAME.$ZPWR_TABLE_NAME</code>, default <code>root.LearningCollection</code>). No ORM, no abstraction layer &mdash; the SQL is the contract.</p>
+
+      <table class="file-table">
+        <thead><tr><th>Verb</th><th>Args</th><th>SQL / behavior</th></tr></thead>
+        <tbody>
+          <tr><td><code>le</code> (Savel)</td><td><code>[-e] [-c CAT] LEARNING</code></td><td><code>insert into &hellip; (category, learning, dateAdded) values (CAT, LEARNING, now())</code>. <code>-c</code> sets category (default <code>programming</code>); <code>-e</code> opens <code>$EDITOR</code> on a temp file instead of taking an inline arg; apostrophes escaped via <code>sed</code>; rejected if <code>$#learning &gt; ZPWR_LEARN_MAX_SIZE</code> (default 3000 chars).</td></tr>
+          <tr><td><code>se</code> (Searchl)</td><td><code>[FILTER...]</code></td><td><code>select learning from &hellip; order by dateAdded</code>, numbered with <code>nl</code>, then each FILTER applied via <code>ag -i</code> (if installed) or <code>grep -i</code>. No filter = full dump. Colorized when <code>ZPWR_COLORS=true</code>.</td></tr>
+          <tr><td><code>see</code> / <code>seee</code></td><td><code>[FILTER]</code></td><td><code>see</code> projects learning + category; <code>seee</code> (Searchlee) does <code>select id, dateAdded, learning, category from &hellip; order by dateAdded</code> numbered with <code>cat -n</code>, filtered via perl + <code>ag</code>/<code>grep</code>.</td></tr>
+          <tr><td><code>ser</code> / <code>sera</code></td><td><code>ser [N]</code></td><td><code>ser</code> = <code>zsh-learn-Searchl | shuf -n N</code> (default 100); <code>sera</code> = <code>zsh-learn-Searchl | shuf</code> (all rows shuffled).</td></tr>
+          <tr><td><code>qu</code> / <code>qua</code></td><td><code>qu [N]</code></td><td><code>qu</code> = <code>ser N | fzf -m --ansi</code> (default 100); <code>qua</code> = <code>sera | fzf -m --ansi</code>. Interactive multi-select quiz.</td></tr>
+          <tr><td><code>sef</code></td><td>&mdash;</td><td><code>zsh-learn-Searchl | tac | fzf --ansi -m</code>, then the selected IDs are pushed back onto the command line as a <code>zsh-learn-Redo ID&hellip;</code> call via <code>source /dev/stdin</code> &mdash; recency-first browse that lands you in the redo/edit path.</td></tr>
+          <tr><td><code>re</code> (Redo)</td><td><code>[ID|REGEX]...</code></td><td>No arg = last row's <code>update &hellip; set learning=&hellip; where id=&hellip;</code> pushed to the buffer via <code>print -rz</code>. With args, each numeric ID or regex resolves through <code>zsh-learn-GetItems</code> to a ready-to-run update line.</td></tr>
+          <tr><td><code>rsql</code> (Redosql)</td><td><code>[ID|REGEX]...</code></td><td>Same selection as <code>re</code>, but writes the <code>update</code> statements to <code>$ZPWR_TEMPFILE_SQL</code>, opens them in <code>vim</code> (or <code>nvim</code> when <code>ZPWR_USE_NEOVIM=true</code>), then pipes the edited file back through <code>${=ZPWR_LEARN_COMMAND}</code>.</td></tr>
+          <tr><td><code>editl</code> (Editl)</td><td><code>ID</code></td><td><code>SELECT learning &hellip; WHERE id = ID</code> into a temp file, opens <code>$EDITOR</code>, then <code>UPDATE &hellip; SET learning=&hellip; WHERE id = ID</code>. Same length-cap + escaping as <code>le</code>.</td></tr>
+          <tr><td><code>del</code></td><td><code>[N]</code></td><td><code>delete from &hellip; order by id desc limit N</code> (default 1). Bulk delete of the most-recent N rows.</td></tr>
+          <tr><td><code>delid</code> (DeleteId)</td><td><code>ID</code></td><td><code>DELETE FROM &hellip; WHERE id = ID</code>. Targeted single-row delete.</td></tr>
+          <tr><td><code>&hellip;-CreateLearningCollection</code></td><td><code>[MYSQL_PW]</code></td><td>Checks <code>information_schema.tables</code>; if absent, <code>create schema if not exists</code> then <code>CREATE TABLE</code> (<code>category</code> varchar(20), <code>learning</code> varchar(<code>$ZPWR_LEARN_MAX_SIZE</code>), <code>dateAdded</code> datetime, <code>id</code> int AUTO_INCREMENT PRIMARY KEY). Optional first arg is the mysql password (else uses <code>~/.my.cnf</code>).</td></tr>
+          <tr><td><code>&hellip;-DropLearningCollection</code></td><td>&mdash;</td><td>Tears down the table.</td></tr>
+        </tbody>
+      </table>
+
+      <hr class="section-rule">
+
+      <h2 class="tutorial-title"><span class="step-hash">=</span>ENVIRONMENT</h2>
+      <p class="tutorial-subtitle">Every knob is a <code>ZPWR_*</code> environment variable, defaulted in the plugin entry with <code>test -z &hellip; &amp;&amp; export</code> so a value set before sourcing wins. The table is the live default set from <code>zsh-learn.plugin.zsh</code>.</p>
+
+      <table class="file-table">
+        <thead><tr><th>Variable</th><th>Default</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td><code>ZPWR_LEARN_COMMAND</code></td><td><code>mysql</code></td><td>The database command every verb pipes SQL into. Set to <code>'sudo mysql'</code> for MariaDB unix-socket auth.</td></tr>
+          <tr><td><code>ZPWR_SCHEMA_NAME</code></td><td><code>root</code></td><td>Schema half of the templated table name.</td></tr>
+          <tr><td><code>ZPWR_TABLE_NAME</code></td><td><code>LearningCollection</code></td><td>Table half. Pre-rename installs used the <code>LearningCollectiion</code> typo.</td></tr>
+          <tr><td><code>ZPWR_LEARN_MAX_SIZE</code></td><td><code>3000</code></td><td>Character cap enforced on <code>le</code> / <code>editl</code> insert; also the <code>learning</code> column width in the generated DDL.</td></tr>
+          <tr><td><code>ZPWR_VARS[maxRecords]</code></td><td><code>2000</code></td><td>Completion candidate cap &mdash; <code>_se</code> feeds at most this many rows into <code>_describe</code>.</td></tr>
+          <tr><td><code>ZPWR_LEARN</code></td><td><em>(unset)</em></td><td>Set to <code>false</code> to skip all ZLE / bindkey / zstyle / fpath / autoload registration &mdash; the opt-out gate.</td></tr>
+          <tr><td><code>ZPWR_COLORS</code></td><td><em>(unset)</em></td><td><code>true</code> enables the perl-driven ANSI colorization in <code>se</code>.</td></tr>
+          <tr><td><code>ZPWR_USE_NEOVIM</code></td><td><em>(unset)</em></td><td><code>true</code> makes <code>rsql</code> open <code>nvim</code> instead of <code>vim</code>.</td></tr>
+          <tr><td><code>ZPWR_TEMPFILE_SQL</code></td><td><code>/tmp/.zpwr-sql-temp</code></td><td>Scratch file <code>rsql</code> writes its <code>update</code> statements to before editing.</td></tr>
+          <tr><td><code>ZPWR_LOGFILE</code></td><td><code>/tmp/.zpwr-log</code></td><td>stderr from the database command is appended here, keeping the search output clean.</td></tr>
+        </tbody>
+      </table>
+
+      <hr class="section-rule">
+
       <h2 class="tutorial-title"><span class="step-hash">#</span>TEST COVERAGE</h2>
-      <p class="tutorial-subtitle"><strong>453</strong> <code>@test</code> blocks across <strong>6</strong> zunit files. <code>t-unit.zsh</code> carries the bulk (432) &mdash; behavioral pins for every verb against a fixture <code>$ZPWR_LEARN_COMMAND</code> stub. The 4 contract files pin install-path / fpath / autoload shape.</p>
+      <p class="tutorial-subtitle"><strong>457</strong> <code>@test</code> blocks across <strong>7</strong> zunit files. <code>t-unit.zsh</code> carries the bulk (432) &mdash; behavioral pins for every verb against a fixture <code>$ZPWR_LEARN_COMMAND</code> stub. The contract files pin install-path / fpath / autoload shape; <code>t-savel-escaping.zsh</code> pins the SQL-quote escaping and character-vs-byte length semantics of the insert path. The CI suite runs them under <a href="https://github.com/MenkeTechnologies/zunit" target="_blank" rel="noopener noreferrer">zunit</a> on Ubuntu against a stubbed database command &mdash; no live <code>mysqld</code> required.</p>
 
       <table class="file-table">
         <thead><tr><th>File</th><th class="num">Tests</th><th>Pins</th></tr></thead>
         <tbody>
           <tr><td><code>t-unit.zsh</code></td><td class="num">432</td><td>Every verb (<code>le</code>, <code>se</code>, <code>see</code>, <code>seee</code>, <code>ser</code>, <code>sera</code>, <code>qu</code>, <code>qua</code>, <code>sef</code>, <code>re</code>, <code>rsql</code>, <code>editl</code>, <code>del</code>, <code>delid</code>, <code>Create</code>/<code>Drop</code>) emits the documented SQL shape against a mocked <code>$ZPWR_LEARN_COMMAND</code>; apostrophe-escape behavior; length-cap behavior; verb-typo aliases resolve to the canonical function.</td></tr>
+          <tr><td><code>t-savel-escaping.zsh</code></td><td class="num">4</td><td>Pins two <code>zsh-learn-Savel</code> invariants the unit suite left unasserted: the <code>'</code>&rarr;<code>\'</code> escape (<code>sed</code> at <code>zsh-learn-Savel:42</code>) actually fires before the apostrophe reaches the <code>INSERT ... VALUES</code> clause (SQL break-out guard), and the size guard at <code>:49</code> counts <em>characters</em> (<code>$#learning</code>), not bytes &mdash; a 3-char multibyte string is not rejected by a 3-char limit.</td></tr>
           <tr><td><code>t-syntax.zsh</code></td><td class="num">2</td><td><code>zsh -n</code> over plugin entry + autoload tree.</td></tr>
           <tr><td><code>t-contract.zsh</code></td><td class="num">3</td><td>Entrypoint stem matches dir; entrypoint parses; <code>#compdef</code> on every <code>_*</code> file.</td></tr>
           <tr><td><code>t-contract2.zsh</code></td><td class="num">6</td><td>fpath augmentation includes both <code>src/</code> AND <code>autoload/</code>; autoload glob picks up every file under <code>autoload/</code> with <code>(.:t)</code>.</td></tr>
           <tr><td><code>t-contract3.zsh</code></td><td class="num">5</td><td>Zinit-style install path stability; <code>ZPWR_LEARN=false</code> opt-out skips bindkey/zstyle registration.</td></tr>
           <tr><td><code>t-contract4.zsh</code></td><td class="num">5</td><td>OMZ-style install path; <code>ZPWR_VARS</code> initialized as association on first source; ZLE widget registered exactly once.</td></tr>
-          <tr class="total-row"><td>Total</td><td class="num">453</td><td>6 zunit files &middot; verb-surface + install-contract</td></tr>
+          <tr class="total-row"><td>Total</td><td class="num">457</td><td>7 zunit files &middot; verb-surface + install-contract + escaping</td></tr>
         </tbody>
       </table>
 
@@ -246,13 +292,14 @@
         <li><strong>Memory</strong>: <code>ZPWR_VARS</code> association + the <code>ZPWR_VERBS</code> entries (when zpwr is loaded) + the autoloaded function table. Zero data structures &mdash; everything is in MySQL.</li>
         <li><strong>Startup cost</strong>: 137-line entry parse + <code>autoload -Uz</code> registration (no compile, no body parse).</li>
         <li><strong>Runtime cost</strong>: one <code>$ZPWR_LEARN_COMMAND</code> subprocess per verb invocation. Search latency is bounded by the configured <code>maxRecords</code> (default 2000) row count.</li>
-        <li><strong>External tools</strong>: <code>mysql</code> (required), <code>fzf</code> (optional, for <code>qu</code> / <code>qua</code> / <code>sef</code>), <code>$EDITOR</code> (for <code>editl</code> / <code>rsql</code>).</li>
+        <li><strong>External tools</strong>: <code>mysql</code> / <code>mariadb</code> client (required, the <code>$ZPWR_LEARN_COMMAND</code> target), <code>perl</code> + <code>nl</code> + <code>paste</code> (search formatting), <code>fzf</code> (optional, for <code>qu</code> / <code>qua</code> / <code>sef</code>), <code>shuf</code> (random recall), <code>ag</code> or <code>grep</code> (filter highlighting), <code>$EDITOR</code> / <code>vim</code> / <code>nvim</code> (for <code>editl</code> / <code>rsql</code> / <code>le -e</code>).</li>
+        <li><strong>Insert safety</strong>: apostrophes in the learning text are escaped (<code>sed 's/'\''/\\'\''/g'</code>) before interpolation; the length cap is enforced in <em>characters</em> (<code>$#learning</code>), so multibyte text is not truncated by a byte count.</li>
       </ul>
 
     </main>
 
     <footer style="text-align:center;padding:2rem;font-size:10px;color:var(--text-muted);font-family:'Orbitron',sans-serif;letter-spacing:2px;">
-      ZSH-LEARN ENGINEERING REPORT &middot; 833 ZSH LINES &middot; 453 ZUNIT TESTS &middot; 26 AUTOLOAD FNS &middot; 16 ALIASES &middot; 3 KEYMAPS &middot; MYSQL BACKEND &middot; LEARNINGCOLLECTIONAPI CROSS-STACK &middot; MENKETECHNOLOGIES
+      ZSH-LEARN ENGINEERING REPORT &middot; 833 ZSH LINES &middot; 457 ZUNIT TESTS &middot; 26 AUTOLOAD FNS &middot; 16 ALIASES &middot; 3 KEYMAPS &middot; MYSQL BACKEND &middot; LEARNINGCOLLECTIONAPI CROSS-STACK &middot; MENKETECHNOLOGIES
     </footer>
   </div>
 
