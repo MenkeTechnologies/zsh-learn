@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark light">
-  <meta name="description" content="zsh-learn — MySQL-backed flashcard / quiz collection for zsh. Save snippets, search with fzf, drill yourself with randomized recall.">
+  <meta name="description" content="zsh-learn — MySQL/MariaDB-backed flashcard / quiz collection for zsh. Save snippets with le (-e editor, -c category), search with se/see/seee or fzf, drill yourself with qu/qua randomized recall, edit in-place with editl/rsql, full SQL passthrough via re/rsql. 26 autoload functions, 16 typo-proof aliases, Ctrl+K ZLE widget.">
   <title>zsh-learn — Documentation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -89,30 +89,60 @@ source zsh-learn/zsh-learn.plugin.zsh</pre>
 
       <section class="tutorial-section">
         <h2>Configuration</h2>
+        <p>Every knob is a <code>ZPWR_*</code> environment variable. The plugin sets defaults with <code>test -z &hellip; &amp;&amp; export</code>, so anything you export <em>before</em> sourcing the plugin wins.</p>
         <table class="example-tbl">
           <tbody>
-            <tr><td><code>ZPWR_LEARN_COMMAND</code></td><td>default <code>mysql</code> &mdash; database command to execute queries</td></tr>
+            <tr><td><code>ZPWR_LEARN_COMMAND</code></td><td>default <code>mysql</code> &mdash; database command every verb pipes SQL into (e.g. <code>'sudo mysql'</code> for MariaDB unix-socket auth)</td></tr>
             <tr><td><code>ZPWR_SCHEMA_NAME</code></td><td>default <code>root</code> &mdash; schema name for the learning table</td></tr>
             <tr><td><code>ZPWR_TABLE_NAME</code></td><td>default <code>LearningCollection</code> &mdash; table name for stored entries</td></tr>
+            <tr><td><code>ZPWR_LEARN_MAX_SIZE</code></td><td>default <code>3000</code> &mdash; character cap on <code>le</code> / <code>editl</code> inserts; also the <code>learning</code> column width in the generated DDL</td></tr>
+            <tr><td><code>ZPWR_LEARN</code></td><td>set to <code>false</code> to skip all ZLE / bindkey / zstyle / fpath / autoload registration (opt-out)</td></tr>
+            <tr><td><code>ZPWR_COLORS</code></td><td>set to <code>true</code> for ANSI-colorized <code>se</code> output</td></tr>
+            <tr><td><code>ZPWR_USE_NEOVIM</code></td><td>set to <code>true</code> to make <code>rsql</code> open <code>nvim</code> instead of <code>vim</code></td></tr>
           </tbody>
         </table>
+        <p>Migration note: the default table name was <code>LearningCollectiion</code> (typo) before the rename. Existing installs: <code>RENAME TABLE root.LearningCollectiion TO root.LearningCollection;</code> &mdash; or keep the old name with <code>export ZPWR_TABLE_NAME=LearningCollectiion</code>.</p>
       </section>
 
       <section class="tutorial-section">
         <h2>Command matrix</h2>
+        <p><strong>Write</strong> &mdash; create, edit, delete entries.</p>
         <table class="example-tbl">
           <tbody>
-            <tr><td><code>le LEARNING</code></td><td>insert a new entry</td></tr>
-            <tr><td><code>editl ID</code></td><td>open entry by ID in <code>$EDITOR</code></td></tr>
-            <tr><td><code>del [N]</code> / <code>delid ID</code></td><td>delete last N (default 1) / delete by ID</td></tr>
-            <tr><td><code>se [FILTER...]</code></td><td>search the learning column with optional filters</td></tr>
-            <tr><td><code>see</code> / <code>seee</code></td><td>also show category / category + date</td></tr>
-            <tr><td><code>sef</code></td><td>search all via fzf (most recent first)</td></tr>
-            <tr><td><code>ser [N]</code> / <code>sera</code></td><td>N random (default 100) / all random</td></tr>
-            <tr><td><code>qu [N]</code> / <code>qua</code></td><td>N random into fzf / all randomized into fzf</td></tr>
-            <tr><td><code>re</code> / <code>rsql</code></td><td>print SQL update statements / open in vim</td></tr>
+            <tr><td><code>le [-e] [-c CAT] LEARNING</code></td><td>insert a new entry. <code>-c</code> sets the category (default <code>programming</code>); <code>-e</code> opens <code>$EDITOR</code> on a temp file instead of taking an inline argument</td></tr>
+            <tr><td><code>editl ID</code></td><td>load entry <code>ID</code> into <code>$EDITOR</code>, then write the edit back as an <code>UPDATE</code></td></tr>
+            <tr><td><code>del [N]</code></td><td>delete the most-recent N entries (default 1)</td></tr>
+            <tr><td><code>delid ID</code></td><td>delete a specific entry by ID</td></tr>
           </tbody>
         </table>
+        <p><strong>Search</strong> &mdash; three tiers by projected columns, plus fzf browse.</p>
+        <table class="example-tbl">
+          <tbody>
+            <tr><td><code>se [FILTER...]</code></td><td>search the learning column; each filter applied via <code>ag -i</code> (if installed) or <code>grep -i</code>; no filter dumps all rows numbered</td></tr>
+            <tr><td><code>see [FILTER]</code></td><td>same, also projecting the category column</td></tr>
+            <tr><td><code>seee [FILTER]</code></td><td>same, projecting id + date + learning + category</td></tr>
+            <tr><td><code>sef</code></td><td>browse all entries in <code>fzf</code> (recency-first); the selection is pushed back as a <code>re ID</code> redo line</td></tr>
+          </tbody>
+        </table>
+        <p><strong>Randomized recall</strong> &mdash; spaced-repetition drilling.</p>
+        <table class="example-tbl">
+          <tbody>
+            <tr><td><code>ser [N]</code></td><td>N random entries (default 100)</td></tr>
+            <tr><td><code>sera</code></td><td>all entries in random order</td></tr>
+            <tr><td><code>qu [N]</code></td><td>N random entries piped into <code>fzf -m</code> for an interactive quiz (default 100)</td></tr>
+            <tr><td><code>qua</code></td><td>all entries randomized into <code>fzf -m</code></td></tr>
+          </tbody>
+        </table>
+        <p><strong>SQL passthrough &amp; admin.</strong></p>
+        <table class="example-tbl">
+          <tbody>
+            <tr><td><code>re [ID|REGEX]...</code></td><td>print a ready-to-run <code>UPDATE</code> onto the command line (<code>print -rz</code>); no arg = last entry; args resolve by numeric ID or regex</td></tr>
+            <tr><td><code>rsql [ID|REGEX]...</code></td><td>same selection, but write the <code>UPDATE</code>s to a temp file, open in <code>vim</code> (or <code>nvim</code>), then apply on save</td></tr>
+            <tr><td><code>zsh-learn-CreateLearningCollection [PW]</code></td><td>create the schema + table (<code>category</code>, <code>learning</code>, <code>dateAdded</code>, auto-increment <code>id</code> PK); optional first arg is the mysql password, else uses <code>~/.my.cnf</code></td></tr>
+            <tr><td><code>zsh-learn-DropLearningCollection</code></td><td>drop the learning table</td></tr>
+          </tbody>
+        </table>
+        <p>Each verb is reachable through typo-proof aliases (<code>es</code>/<code>ees</code>/<code>ses</code>/<code>ese</code>/<code>sse</code>/<code>ssee</code> &rarr; <code>se</code>; <code>er</code>/<code>rer</code> &rarr; <code>re</code>) and is aliased with <code>noglob</code> so filter wildcards (<code>*</code>, <code>?</code>, <code>[]</code>) reach the function instead of expanding against the filesystem.</p>
       </section>
 
       <section class="tutorial-section">
@@ -122,6 +152,58 @@ source zsh-learn/zsh-learn.plugin.zsh</pre>
             <tr><td><code>^k</code> (viins + vicmd)</td><td><code>zsh-learn-Learn</code> &mdash; insert the current buffer as a learning entry</td></tr>
           </tbody>
         </table>
+      </section>
+
+      <section class="tutorial-section">
+        <h2>Workflow</h2>
+<pre># 1. one-time: create the schema + table
+zsh-learn-CreateLearningCollection
+
+# 2. save a learning (inline, default category 'programming')
+le "git rebase -i HEAD~3  # interactive rebase last 3 commits"
+
+# 3. save with a custom category, or compose in your editor
+le -c git "git reflog  # recover lost commits"
+le -e            # opens $EDITOR; whatever you write is the entry
+
+# 4. search
+se rebase        # learning column, filtered
+see git          # also show category
+seee             # id + date + learning + category, all rows
+
+# 5. drill yourself: 50 random entries into fzf
+qu 50
+qua              # every entry, randomized, into fzf
+
+# 6. fix an entry
+editl 42         # edit entry 42 in $EDITOR
+re 42            # push an UPDATE for entry 42 onto the command line
+rsql rebase      # edit every 'rebase' match's UPDATE in vim, apply on save
+
+# 7. delete
+del              # delete the most recent entry
+del 3            # delete the last 3
+delid 42         # delete entry 42</pre>
+        <p>The <kbd>Ctrl-K</kbd> widget saves whatever is currently on the command line as a learning without leaving the prompt &mdash; type a command, press <kbd>Ctrl-K</kbd>, and it is stored.</p>
+      </section>
+
+      <section class="tutorial-section">
+        <h2>Troubleshooting</h2>
+        <table class="example-tbl">
+          <tbody>
+            <tr><td>Nothing is stored / silent errors</td><td>The database command's stderr is appended to <code>$ZPWR_LOGFILE</code> (default <code>/tmp/.zpwr-log</code>) to keep search output clean &mdash; check it. Confirm <code>$ZPWR_LEARN_COMMAND</code> connects: <code>echo 'select 1' | mysql</code>.</td></tr>
+            <tr><td>MariaDB needs sudo / unix-socket auth</td><td><code>export ZPWR_LEARN_COMMAND='sudo mysql'</code> before sourcing the plugin.</td></tr>
+            <tr><td>Table not found after upgrade</td><td>The default table was renamed from <code>LearningCollectiion</code>. Rename the old table or set <code>ZPWR_TABLE_NAME=LearningCollectiion</code> (see Configuration).</td></tr>
+            <tr><td>Entry rejected on save</td><td>Learnings over <code>ZPWR_LEARN_MAX_SIZE</code> characters (default 3000) are refused. Raise the cap or shorten the entry.</td></tr>
+            <tr><td><code>qu</code> / <code>qua</code> / <code>sef</code> do nothing</td><td>These require <code>fzf</code> on <code>PATH</code>. The inline <code>se</code> / <code>ser</code> verbs work without it.</td></tr>
+            <tr><td>Bindings / completion not loading</td><td>If <code>ZPWR_LEARN=false</code> is set, all ZLE / bindkey / zstyle / autoload registration is skipped by design. Unset it.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="tutorial-section">
+        <h2>Engineering report</h2>
+        <p>For the full source breakdown &mdash; per-file line counts, the exact SQL each verb emits, the environment-variable reference, and the 457-test zunit coverage map &mdash; see the <a href="report.html">engineering report</a>.</p>
       </section>
 
       <section class="tutorial-section">
