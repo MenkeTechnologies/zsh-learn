@@ -17,6 +17,8 @@
 
 ### [`strykelang`](https://github.com/MenkeTechnologies/strykelang) &middot; [`zshrs`](https://github.com/MenkeTechnologies/zshrs) · [`MenkeTechnologiesMeta`](https://github.com/MenkeTechnologies/MenkeTechnologiesMeta) · [`zsh-more-completions`](https://github.com/MenkeTechnologies/zsh-more-completions) · [`zsh-git-acp`](https://github.com/MenkeTechnologies/zsh-git-acp) · [`zsh-expand`](https://github.com/MenkeTechnologies/zsh-expand) · [`zpwr`](https://github.com/MenkeTechnologies/zpwr)
 
+### [`Read the Docs`](https://menketechnologies.github.io/zsh-learn/) &middot; [`Engineering Report`](https://menketechnologies.github.io/zsh-learn/report.html)
+
 ---
 
 ## Table of Contents
