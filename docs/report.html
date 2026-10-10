@@ -113,12 +113,12 @@
           <tr>
             <td><code>autoload/zsh-learn-Searchl</code> &middot; <code>Searchle</code> &middot; <code>Searchlee</code></td>
             <td class="num">71 / 72 / 21</td>
-            <td>Three-tier search functions, fronted by <code>se</code> / <code>see</code> / <code>seee</code> respectively. Each tier widens the projected column set (learning &rarr; learning+category &rarr; learning+category+date). All three accept filter arguments and apply them via SQL <code>WHERE ... LIKE ...</code>.</td>
+            <td>Three-tier search functions, fronted by <code>se</code> / <code>see</code> / <code>seee</code> respectively. Each tier widens the projected column set (learning &rarr; learning+category &rarr; learning+category+date). All three accept filter arguments and apply them client-side via <code>ag -i</code> (if installed) or <code>grep -i</code>.</td>
           </tr>
           <tr>
             <td><code>autoload/zsh-learn-Redo</code> &middot; <code>Redosql</code></td>
             <td class="num">21 / 29</td>
-            <td>SQL passthrough. <code>re ID</code> prints the matched row plus a ready-to-edit <code>UPDATE</code> statement; <code>rsql ID</code> opens the same in <code>$EDITOR</code>.</td>
+            <td>SQL passthrough. <code>re ID</code> pushes a ready-to-edit <code>UPDATE</code> command for the matched row onto the command line; <code>rsql ID</code> writes the statements to a temp file, opens it in <code>vim</code> (<code>nvim</code> when <code>ZPWR_USE_NEOVIM=true</code>), then applies the saved file.</td>
           </tr>
           <tr>
             <td><code>autoload/zsh-learn-Editl</code> &middot; <code>DeleteId</code> &middot; <code>del</code></td>
@@ -133,7 +133,7 @@
           <tr>
             <td><code>autoload/zsh-learn-CreateLearningCollection</code> &middot; <code>DropLearningCollection</code></td>
             <td class="num">65 / 61</td>
-            <td>DDL admin. <code>Create</code> emits the schema (id PK + auto-increment, learning TEXT, category VARCHAR, timestamp), <code>Drop</code> tears it down. Largest single autoload files because they carry the literal DDL strings.</td>
+            <td>DDL admin. <code>Create</code> emits the schema (<code>category</code> varchar(20), <code>learning</code> varchar(<code>ZPWR_LEARN_MAX_SIZE</code>), <code>dateAdded</code> datetime, <code>id</code> auto-increment PK), <code>Drop</code> tears it down. Largest single autoload files because they carry the literal DDL strings.</td>
           </tr>
           <tr>
             <td><code>autoload/zsh-learn-Get</code> &middot; <code>GetItems</code> &middot; <code>GetLastItem</code></td>
@@ -264,7 +264,7 @@
         </div>
         <div class="feature-card">
           <h4>Typo-proof verb aliases</h4>
-          <p>16 aliases mapped to 7 canonical functions. <code>es</code> / <code>ees</code> / <code>ses</code> / <code>ese</code> / <code>sse</code> / <code>ssee</code> all dispatch to <code>zsh-learn-Searchl</code>; <code>re</code> / <code>rer</code> / <code>er</code> all dispatch to <code>zsh-learn-Redo</code>. Muscle-memory typos still work &mdash; the operator never has to remember the exact spelling.</p>
+          <p>16 aliases mapped onto the canonical functions. <code>es</code> / <code>ees</code> / <code>ses</code> / <code>ese</code> / <code>sse</code> / <code>ssee</code> all dispatch to <code>zsh-learn-Searchl</code>; <code>re</code> / <code>rer</code> / <code>er</code> all dispatch to <code>zsh-learn-Redo</code>. Muscle-memory typos still work &mdash; the operator never has to remember the exact spelling.</p>
         </div>
         <div class="feature-card">
           <h4>3-tier search by projected columns</h4>
@@ -288,10 +288,10 @@
 
       <h2 class="tutorial-title"><span class="step-hash">@</span>FOOTPRINT</h2>
       <ul style="font-size:12px;color:var(--text-dim);line-height:1.7;">
-        <li><strong>Disk</strong>: ~28 files under <code>autoload/</code> + <code>src/_se</code> + plugin entry. No compiled artifacts.</li>
+        <li><strong>Disk</strong>: 26 files under <code>autoload/</code> + <code>src/_se</code> + plugin entry. No compiled artifacts.</li>
         <li><strong>Memory</strong>: <code>ZPWR_VARS</code> association + the <code>ZPWR_VERBS</code> entries (when zpwr is loaded) + the autoloaded function table. Zero data structures &mdash; everything is in MySQL.</li>
         <li><strong>Startup cost</strong>: 137-line entry parse + <code>autoload -Uz</code> registration (no compile, no body parse).</li>
-        <li><strong>Runtime cost</strong>: one <code>$ZPWR_LEARN_COMMAND</code> subprocess per verb invocation. Search latency is bounded by the configured <code>maxRecords</code> (default 2000) row count.</li>
+        <li><strong>Runtime cost</strong>: one <code>$ZPWR_LEARN_COMMAND</code> subprocess per verb invocation. Tab-completion candidates are capped by <code>ZPWR_VARS[maxRecords]</code> (default 2000).</li>
         <li><strong>External tools</strong>: <code>mysql</code> / <code>mariadb</code> client (required, the <code>$ZPWR_LEARN_COMMAND</code> target), <code>perl</code> + <code>nl</code> + <code>paste</code> (search formatting), <code>fzf</code> (optional, for <code>qu</code> / <code>qua</code> / <code>sef</code>), <code>shuf</code> (random recall), <code>ag</code> or <code>grep</code> (filter highlighting), <code>$EDITOR</code> / <code>vim</code> / <code>nvim</code> (for <code>editl</code> / <code>rsql</code> / <code>le -e</code>).</li>
         <li><strong>Insert safety</strong>: apostrophes in the learning text are escaped (<code>sed 's/'\''/\\'\''/g'</code>) before interpolation; the length cap is enforced in <em>characters</em> (<code>$#learning</code>), so multibyte text is not truncated by a byte count.</li>
       </ul>

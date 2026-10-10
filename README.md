@@ -115,8 +115,8 @@ export ZPWR_TABLE_NAME="LearningCollection"
 
 | Command | Args | Description |
 |:---|:---|:---|
-| `re` | `[ID\|FILTER]` | Print matching entries with SQL update statements |
-| `rsql` | `[ID\|FILTER]` | Same as `re` but opens in vim |
+| `re` | `[ID\|FILTER]` | Push update commands for matching entries onto the command line |
+| `rsql` | `[ID\|FILTER]` | Same selection as `re`; opens the update statements in vim (nvim if `ZPWR_USE_NEOVIM=true`), then applies them |
 
 ### Admin
 
