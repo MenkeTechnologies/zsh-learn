@@ -66,6 +66,8 @@ zinit load MenkeTechnologies/zsh-learn
 | `ZPWR_LEARN_COMMAND` | `mysql` | Database command to execute queries |
 | `ZPWR_SCHEMA_NAME` | `root` | Schema name for the learning table |
 | `ZPWR_TABLE_NAME` | `LearningCollection` | Table name for stored entries |
+| `ZPWR_LEARN_MAX_SIZE` | `3000` | Maximum length in characters of an entry accepted by `le` |
+| `ZPWR_LEARN` | unset | Set to `false` before loading to skip keybinding, completion styles, and autoload setup |
 
 ```sh
 # Example: MariaDB with unix auth
